@@ -1,0 +1,15 @@
+6, 6, 6
+
+SpawnTile, 0, 0, 0
+GoalTile, 5, 0, 5
+NomalTile, 1, 0, 0
+NomalTile, 2, 0, 0
+NomalTile, 3, 0, 0
+NomalTile, 4, 0, 0
+NomalTile, 4, 1, 0
+NomalTile, 4, 2, 0
+NomalTile, 5, 0, 0
+NomalTile, 0, 0, 1
+NomalTile, 0, 0, 2
+NomalTile, 0, 0, 3
+NomalTile, 0, 0, 4

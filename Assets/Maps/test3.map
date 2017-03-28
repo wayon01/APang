@@ -1,0 +1,4 @@
+6, 6, 6
+
+SpawnTile, 0, 0, 0
+GoalTile, 5, 0, 5

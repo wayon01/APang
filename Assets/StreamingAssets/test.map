@@ -1,0 +1,22 @@
+7, 6, 5
+
+SpawnTile, 0, 0, 0
+GrassTile, 1, 0, 1
+GrassTile, 2, 0, 0
+NomalTile, 3, 1, 4
+NomalTile, 0, 0, 2
+
+GrassTile, 1, 4, 1
+TreeTile, 1, 4, 2
+GrassTile, 2, 5, 4
+GoalTile, 3, 5, 4
+
+NomalTile, 4, 2, 3
+
+MushroomTile, 4, 3, 0
+NomalTile, 4, 2, 0
+NomalTile, 3, 3, 0
+
+
+FireTile, 6, 0, 0
+FountainTile, 6, 0, 1

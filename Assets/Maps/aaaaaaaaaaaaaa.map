@@ -1,0 +1,8 @@
+6, 6, 6
+
+SpawnTile, 0, 0, 0
+GoalTile, 5, 0, 5
+NomalTile, 1, 0, 3
+GrassTile, 2, 0, 3
+FireTile, 3, 0, 3
+NomalTile, 4, 1, 3
