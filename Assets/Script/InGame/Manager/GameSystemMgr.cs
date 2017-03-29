@@ -19,6 +19,7 @@ public class GameSystemMgr : MonoBehaviour {
     public bool isPlayerMovingUp;
 
     public int m_playerMovingCount;
+    public int m_nextStageId;
 
     private Vector3 selectedTilePosition;
     private Vector3 prevPlayerPosition;
@@ -47,6 +48,10 @@ public class GameSystemMgr : MonoBehaviour {
         if (tileMgr.isClicked) {
             OnSelected();
 	        tileMgr.isClicked = false;
+	    }
+
+	    if (isCleared) {
+	        tileMgr.StageManager.GetComponent<StageMgr>().SetStageChanged(m_nextStageId);
 	    }
 	}
 

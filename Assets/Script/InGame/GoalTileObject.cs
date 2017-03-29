@@ -20,7 +20,7 @@ public class GoalTileObject : TileObject {
 
     public override void SetLocalX(float x) {
         base.SetLocalX(x);
-        transform.position = new Vector3(x, transform.position.y, transform.position.z);
+        //transform.position = new Vector3(x, transform.position.y, transform.position.z);
         if (player.positionId.y == id.y && player.positionId.z == id.z) {
             gameSystemMgr.isCleared = true;
         }
@@ -28,7 +28,14 @@ public class GoalTileObject : TileObject {
 
     public override void SetLocalZ(float z) {
         base.SetLocalZ(z);
-        transform.position = new Vector3(transform.position.x, transform.position.y, z);
+        //transform.position = new Vector3(transform.position.x, transform.position.y, z);
+        if (player.positionId.y == id.y && player.positionId.x == id.x) {
+            gameSystemMgr.isCleared = true;
+        }
+    }
+
+    public override void OnPlayerMoved() {
+        base.OnPlayerMoved();
         if (player.positionId.y == id.y && player.positionId.x == id.x) {
             gameSystemMgr.isCleared = true;
         }

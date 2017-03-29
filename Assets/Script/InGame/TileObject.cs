@@ -31,12 +31,16 @@ public class TileObject : AGameObject {
 
 
     public virtual void SetLocalX(float x) {
-        transform.position = new Vector3(x, transform.position.y, transform.position.z);
+        //transform.position = new Vector3(x, transform.position.y, transform.position.z);
     }
 
     public virtual void SetLocalZ(float z)
     {
-        transform.position = new Vector3(transform.position.x, transform.position.y, z);
+        //transform.position = new Vector3(transform.position.x, transform.position.y, z);
+    }
+
+    public virtual void OnPlayerMoved() {
+        
     }
 
     public void SetGravity(bool activated) {

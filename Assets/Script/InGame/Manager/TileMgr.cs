@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using UnityEngine;
 
 public struct TileAreaValue {
@@ -35,6 +36,9 @@ public class TileMgr : MonoBehaviour {
     public GameObject GameSystemManager;
     private GameSystemMgr gameSystemMgr;
 
+    public GameObject StageManager;
+    private StageMgr stageMgr;
+
     public GameObject Player;
 
     //타일 종류
@@ -57,6 +61,7 @@ public class TileMgr : MonoBehaviour {
         CameraManager = GameObject.Find("CameraManager");
         _cameraMgr = CameraManager.GetComponent<CameraMgr>();
         gameSystemMgr = GameSystemManager.GetComponent<GameSystemMgr>();
+        stageMgr = StageManager.GetComponent<StageMgr>();
         MainCamera = _cameraMgr.MainCamera;
         _mSelectedTileId = new Vector3(-1, -1, -1);
 
@@ -64,6 +69,7 @@ public class TileMgr : MonoBehaviour {
         string path = "jar:file://" + Application.dataPath + "!/assets/test.map";
         //ParseAndroid(path);
         Parse(@"./Assets/Maps/test.map");
+        SettingMap(0);
     }
 
 
@@ -74,10 +80,10 @@ public class TileMgr : MonoBehaviour {
             OnClickTileObject(_cameraMgr.isRelax);
 
         if (gameSystemMgr.isPlayerMovingUp) {
-            //AllReshapeTilePosition((int)_cameraMgr.FinalRotationY);
+            AllReshapeTilePosition((int)_cameraMgr.FinalRotationY);
         }
 
-        if (gameSystemMgr.isCleared) {
+        if (gameSystemMgr.isCleared && gameSystemMgr.m_nextStageId == -1) {
             for (int x = 0; x < _lengthX; x++) {
                 for (int y = 0; y < _lengthY; y++) {
                     for (int z = 0; z < _lengthZ; z++) {
@@ -95,12 +101,12 @@ public class TileMgr : MonoBehaviour {
     private void ReshapeTilePosition(bool isRelax, int rotationY) {
         if (!isRelax && !isResetTilePosition) {
             isResetTilePosition = true;
-            //AllResetTilePosition(rotationY);
+            AllResetTilePosition(rotationY);
 
         }
         else if (isRelax && isResetTilePosition) {
             isResetTilePosition = false;
-            //AllReshapeTilePosition(rotationY);
+            AllReshapeTilePosition(rotationY);
 
         }
     }
@@ -111,31 +117,31 @@ public class TileMgr : MonoBehaviour {
         Player.GetComponent<AActor>().resetPosition();
         Player.GetComponent<APlayer>().isBlocked = false;
 
-        for (int j = 0; j < _lengthY; j++) {
+        //for (int j = 0; j < _lengthY; j++) {
 
-            TileAreaValue[] tileVal_X = m_tileArea[j].x;
-            TileAreaValue[] tileVal_Z = m_tileArea[j].z;
+        //    TileAreaValue[] tileVal_X = m_tileArea[j].x;
+        //    TileAreaValue[] tileVal_Z = m_tileArea[j].z;
 
-            for (int i = 0; i < _lengthX; i++) {
+        //    for (int i = 0; i < _lengthX; i++) {
 
-                if (tileVal_X[i].id_front != -1)
-                    tileVal_X[i].front.GetComponent<TileObject>().resetPosition();
+        //        if (tileVal_X[i].id_front != -1)
+        //            tileVal_X[i].front.GetComponent<TileObject>().resetPosition();
 
-                if (tileVal_X[i].id_back != -1)
-                    tileVal_X[i].back.GetComponent<TileObject>().resetPosition();
+        //        if (tileVal_X[i].id_back != -1)
+        //            tileVal_X[i].back.GetComponent<TileObject>().resetPosition();
 
-            }
+        //    }
 
-            for (int i = 0; i < _lengthZ; i++) {
+        //    for (int i = 0; i < _lengthZ; i++) {
 
-                if (tileVal_Z[i].id_front != -1)
-                    tileVal_Z[i].front.GetComponent<TileObject>().resetPosition();
+        //        if (tileVal_Z[i].id_front != -1)
+        //            tileVal_Z[i].front.GetComponent<TileObject>().resetPosition();
 
-                if (tileVal_Z[i].id_back != -1)
-                    tileVal_Z[i].back.GetComponent<TileObject>().resetPosition();
+        //        if (tileVal_Z[i].id_back != -1)
+        //            tileVal_Z[i].back.GetComponent<TileObject>().resetPosition();
 
-            }
-        }
+        //    }
+        //}
     }
 
     private void AllReshapeTilePosition(int rotationY) {
@@ -148,13 +154,13 @@ public class TileMgr : MonoBehaviour {
             case 0:
             case 90:
                 isFront = true; {
-                    Vector3 playerPos = Player.transform.position;
-                    if (!positionIsX) {
-                        Player.transform.position = new Vector3(-_lengthX, playerPos.y, playerPos.z);
-                    }
-                    else {
-                        Player.transform.position = new Vector3(playerPos.x, playerPos.y, -_lengthZ);
-                    }
+                    //Vector3 playerPos = Player.transform.position;
+                    //if (!positionIsX) {
+                    //    Player.transform.position = new Vector3(-_lengthX, playerPos.y, playerPos.z);
+                    //}
+                    //else {
+                    //    Player.transform.position = new Vector3(playerPos.x, playerPos.y, -_lengthZ);
+                    //}
                 }
 
                 break;
@@ -162,13 +168,13 @@ public class TileMgr : MonoBehaviour {
             case 180:
             case -90:
                 isFront = false; {
-                    Vector3 playerPos = Player.transform.position;
-                    if (!positionIsX) {
-                        Player.transform.position = new Vector3(_lengthX, playerPos.y, playerPos.z);
-                    }
-                    else {
-                        Player.transform.position = new Vector3(playerPos.x, playerPos.y, _lengthZ);
-                    }
+                    //Vector3 playerPos = Player.transform.position;
+                    //if (!positionIsX) {
+                    //    Player.transform.position = new Vector3(_lengthX, playerPos.y, playerPos.z);
+                    //}
+                    //else {
+                    //    Player.transform.position = new Vector3(playerPos.x, playerPos.y, _lengthZ);
+                    //}
                 }
 
                 break;
@@ -371,30 +377,101 @@ public class TileMgr : MonoBehaviour {
             return;
         }
 
-        source = source.Replace(" ", "");
-        //Map Size
-        string[] values = source.Split(',');
-        if (values.Length == 0) {
-            fp.Close();
-            return;
-        }
-        SetMapSize(int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
+        string[] values;
+        int stageLength = 0;
+        StringBuilder stringBuilder = null;
+        bool isStageAvailable = false;
 
-        source = fp.ReadLine();
         while (source != null) {
             source = source.Replace(" ", "");
             values = source.Split(',');
+
+            if (source == "#end") {
+                break;
+            }
 
             if (values.Length == 0) {
                 break;
             }
 
-            ParseTile(values);
+            //map size
+            if (values.Length == 3) {
+                if (stringBuilder == null) {
+                    stringBuilder = new StringBuilder();
+                }
+                stringBuilder.AppendLine(source);
+                source = fp.ReadLine();
+                continue;
+            }
+
+            //stage 설정
+            if (values[0] == "#STAGE") {
+                //첫 스테이지일 경우
+                if (!isStageAvailable) {
+                    stringBuilder = new StringBuilder();
+                    isStageAvailable = true;
+                    source = fp.ReadLine();
+                    stageLength = int.Parse(values[1]);
+                    continue;
+                }
+                int tmp = int.Parse(values[1]);
+                stageMgr.AddStageString(stringBuilder.ToString(), stageLength);
+                stageLength = tmp;
+                stringBuilder = new StringBuilder();
+                source = fp.ReadLine();
+                continue;
+
+            }
+
+            if (values.Length == 4 || values.Length == 5 && values[0] == "GoalTile") {
+                if (stringBuilder == null) {
+                    stringBuilder = new StringBuilder();
+                }
+                stringBuilder.AppendLine(source);
+            }
+            //ParseTile(values);
 
             source = fp.ReadLine();
         }
 
+        if (stringBuilder != null) {
+            stageMgr.AddStageString(stringBuilder.ToString(), stageLength);
+        }
+
         fp.Close();
+    }
+
+    public void SettingMap(int stageId) {
+
+        if (stageId < 0) return;
+
+        for (int x = 0; x < _lengthX; x++) {
+            for (int y = 0; y < _lengthY; y++) {
+                for (int z = 0; z < _lengthZ; z++) {
+                    Destroy(_mTileMap[x, y, z]);
+                }
+            }
+        }
+
+        StringReader stringReader = stageMgr.GetStageStringReader(stageId);
+        string[] values;
+        string source = stringReader.ReadLine();
+
+
+        while (source != null) {
+            source = source.Replace(" ", "");
+            values = source.Split(',');
+            //map size
+            if (values.Length == 3) {
+                SetMapSize(int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
+                source = stringReader.ReadLine();
+                continue;
+            }
+            ParseTile(values);
+            source = stringReader.ReadLine();
+
+        }
+
     }
 
     private void ParseAndroid(string mapPath) {
@@ -431,7 +508,7 @@ public class TileMgr : MonoBehaviour {
 
     private void ParseTile(string[] values) {
 
-        if (values.Length != 4) {
+        if (values.Length != 4 && values[0] != "GoalTile") {
             return;
         }
 
@@ -444,8 +521,15 @@ public class TileMgr : MonoBehaviour {
             case "GrassTile":
                 tileObject = GrassTile;
                 break;
-            case "GoalTile":
+            case "GoalTile": {
+                if (values.Length == 5) {
+                    gameSystemMgr.m_nextStageId = int.Parse(values[4]);
+                }
+                else {
+                    gameSystemMgr.m_nextStageId = -1;
+                }
                 tileObject = GoalTile;
+            }
                 break;
             case "FireTile":
                 tileObject = FireTile;
