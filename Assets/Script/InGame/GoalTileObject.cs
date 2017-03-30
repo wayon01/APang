@@ -6,12 +6,17 @@ public class GoalTileObject : TileObject {
 
     private APlayer player;
     private GameSystemMgr gameSystemMgr;
+    private int stageNextId;
 
+
+    void Awake() {
+        stageNextId = -1;
+    }
 	// Use this for initialization
-	void Start () {
+    private void Start () {
         player = GameObject.Find("player").GetComponent<APlayer>();
         gameSystemMgr = GameObject.Find("GameSystemManager").GetComponent<GameSystemMgr>();
-    }
+	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -23,6 +28,7 @@ public class GoalTileObject : TileObject {
         //transform.position = new Vector3(x, transform.position.y, transform.position.z);
         if (player.positionId.y == id.y && player.positionId.z == id.z) {
             gameSystemMgr.isCleared = true;
+            gameSystemMgr.m_nextStageId = stageNextId;
         }
     }
 
@@ -31,14 +37,12 @@ public class GoalTileObject : TileObject {
         //transform.position = new Vector3(transform.position.x, transform.position.y, z);
         if (player.positionId.y == id.y && player.positionId.x == id.x) {
             gameSystemMgr.isCleared = true;
+            gameSystemMgr.m_nextStageId = stageNextId;
         }
     }
 
-    public override void OnPlayerMoved() {
-        base.OnPlayerMoved();
-        if (player.positionId.y == id.y && player.positionId.x == id.x) {
-            gameSystemMgr.isCleared = true;
-        }
+    public void SetNextStageId(int id) {
+        stageNextId = id;
     }
 
     public override void Init() {

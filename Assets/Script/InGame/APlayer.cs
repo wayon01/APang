@@ -17,7 +17,8 @@ public class APlayer : AActor {
 
     void LateUpdate() {
         Quaternion q = Camera.main.transform.rotation;
-        transform.rotation = q;
+        if(!Input.GetMouseButtonDown(0) && !Input.GetMouseButton(0))
+            transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.1f);
     }
 
     public override void Die() {

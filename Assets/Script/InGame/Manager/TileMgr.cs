@@ -272,7 +272,7 @@ public class TileMgr : MonoBehaviour {
         _lengthZ = length_z;
     }
 
-    public bool SetTile(GameObject mObject, int x, int y, int z) {
+    public bool SetTile(GameObject mObject, int x, int y, int z, params string[] additional_val) {
         if (mObject == null) return false;
         if ((x < 0) || (y < 0) || (z < 0)) return false;
         if (_mTileMap[x, y, z] != null) return false;
@@ -318,6 +318,13 @@ public class TileMgr : MonoBehaviour {
         {
             m_tileArea[y].x[x].back = _mTileMap[x, y, z];
             m_tileArea[y].x[x].id_back = z;
+        }
+        //===================================
+        //가변인자에 대한 내용
+        if (additional_val.Length <= 0) return true;
+
+        if (mObject == GoalTile) {
+            ((GoalTileObject)obj).SetNextStageId(int.Parse(additional_val[0]));
         }
 
         return true;
@@ -522,15 +529,13 @@ public class TileMgr : MonoBehaviour {
                 tileObject = GrassTile;
                 break;
             case "GoalTile": {
-                if (values.Length == 5) {
-                    gameSystemMgr.m_nextStageId = int.Parse(values[4]);
-                }
-                else {
-                    gameSystemMgr.m_nextStageId = -1;
-                }
                 tileObject = GoalTile;
-            }
+                if (values.Length > 4) {
+                    SetTile(tileObject, int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3]), values[4]);
+                    return;
+                }
                 break;
+            }
             case "FireTile":
                 tileObject = FireTile;
                 break;
