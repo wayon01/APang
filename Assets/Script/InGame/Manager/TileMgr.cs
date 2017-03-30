@@ -47,6 +47,7 @@ public class TileMgr : MonoBehaviour {
     public GameObject FireTile = null;
     public GameObject SpawnTile = null;
     public GameObject GoalTile = null;
+    public GameObject NpcPoliceTile = null;
     public GameObject TreeTile = null;
     public GameObject MushroomTile = null;
     public GameObject FountainTile = null;
@@ -83,7 +84,7 @@ public class TileMgr : MonoBehaviour {
             AllReshapeTilePosition((int)_cameraMgr.FinalRotationY);
         }
 
-        if (gameSystemMgr.isCleared && gameSystemMgr.m_nextStageId == -1) {
+        if (gameSystemMgr.isCleared && gameSystemMgr.m_nextStageId == -1 || gameSystemMgr.isFailed) {
             for (int x = 0; x < _lengthX; x++) {
                 for (int y = 0; y < _lengthY; y++) {
                     for (int z = 0; z < _lengthZ; z++) {
@@ -95,6 +96,12 @@ public class TileMgr : MonoBehaviour {
                     }
                 }
             }
+
+            Rigidbody rigidbody = Player.GetComponent<Rigidbody>();
+            rigidbody.useGravity = true;
+            rigidbody.isKinematic = false;
+
+
         }
     }
 
@@ -541,6 +548,9 @@ public class TileMgr : MonoBehaviour {
                 break;
             case "TreeTile":
                 tileObject = TreeTile;
+                break;
+            case "NpcPoliceTile":
+                tileObject = NpcPoliceTile;
                 break;
             case "MushroomTile":
                 tileObject = MushroomTile;

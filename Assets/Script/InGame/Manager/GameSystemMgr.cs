@@ -10,6 +10,7 @@ public class GameSystemMgr : MonoBehaviour {
     public GameObject TileManager;
 
     public bool isCleared;
+    public bool isFailed;
 
     private TileMgr tileMgr;
     private CameraMgr cameraMgr;
@@ -36,6 +37,7 @@ public class GameSystemMgr : MonoBehaviour {
 
 
 	    isCleared = false;
+	    isFailed = false;
 	    m_playerMovingCount = 0;
 	}
 	
@@ -113,12 +115,18 @@ public class GameSystemMgr : MonoBehaviour {
         if (mapLength == Vector3.zero) {
             mapLength = tileMgr.GetIdLength();
         }
-        
+
+        GameObject tmpTile;
 
         //클릭한 타일 위에 다른 타일이 있을 경우 예외처리
-        if (clickedTileId.y < mapLength.y - 1 && tileMgr.GetSurfaceTile(isPositionX, isFront, clickedTileId + new Vector3(0, 1, 0)) != null) {
-            return false;
+        if (clickedTileId.y < mapLength.y - 1) {
+            tmpTile = tileMgr.GetSurfaceTile(isPositionX, isFront, clickedTileId + new Vector3(0, 1, 0));
+            if (tmpTile != null) {
+                if (!tmpTile.GetComponent<TileObject>().IsCanPlayerIgnoreBlock())
+                    return false;
+            }
         }
+        
 
 
         //플레이어 위
@@ -128,9 +136,14 @@ public class GameSystemMgr : MonoBehaviour {
             if (tempTile.y > mapLength.y - 1 || tileMgr.GetSurfaceTile(isPositionX, isFront, tempTile) == null) {
 
                 //플레이어가 벽에 막혀있는데 올라가려고 할 경우
-                if (tileMgr.GetSurfaceTile(isPositionX, isFront, Player.positionId + new Vector3(0, 1, 0)) != null) {
-                    return false;
+                if (tempTile.y <= mapLength.y - 1) {
+                    tmpTile = tileMgr.GetSurfaceTile(isPositionX, isFront, Player.positionId + new Vector3(0, 1, 0));
+                    if (tmpTile != null) {
+                        if (!tmpTile.GetComponent<TileObject>().IsCanPlayerIgnoreBlock())
+                            return false;
+                    }
                 }
+                
 
                 //x축 기준 조건이 맞는 경우
                 if (isPositionX && Math.Abs(clickedTileId.x - Player.positionId.x) <= 1) {
@@ -169,7 +182,8 @@ public class GameSystemMgr : MonoBehaviour {
         else if(heightLevel == -1) {
             Vector3 tempTile = clickedTileId + new Vector3(0, 2, 0);
             //플레이어 옆에 있는 장애물이 존재하지 않을 경우
-            if (tempTile.y > mapLength.y - 1 || tileMgr.GetSurfaceTile(isPositionX, isFront, tempTile) == null) {
+            tmpTile = tileMgr.GetSurfaceTile(isPositionX, isFront, tempTile);
+            if (tempTile.y > mapLength.y - 1 || tmpTile == null || tmpTile.GetComponent<TileObject>().IsCanPlayerIgnoreBlock()) {
                 //x축 기준 조건이 맞는 경우
                 if (isPositionX && Math.Abs(clickedTileId.x - Player.positionId.x) <= 1) {
                     return true;

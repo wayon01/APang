@@ -2,6 +2,7 @@
 
 public class TileObject : AGameObject {
     private bool _bIsRigidActivated;
+    protected bool _bIsCanIgnoreBlock;
 
     private Rigidbody m_rigidbody;
 
@@ -12,6 +13,7 @@ public class TileObject : AGameObject {
         _bIsRigidActivated = false;
         SetRigidBody(_bIsRigidActivated);
         SetGravity(false);
+        _bIsCanIgnoreBlock = false;
     }
 
     // Update is called once per frame
@@ -41,6 +43,10 @@ public class TileObject : AGameObject {
 
     public virtual void OnPlayerMoved() {
         
+    }
+
+    public bool IsCanPlayerIgnoreBlock() {
+        return _bIsCanIgnoreBlock;
     }
 
     public void SetGravity(bool activated) {
