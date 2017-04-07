@@ -77,6 +77,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Program Files %28x86%29\Visual Leak Detector\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Visual Leak Detector\lib\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -116,6 +118,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,15 +153,20 @@
     <ClInclude Include="AssetProc.h" />
     <ClInclude Include="AssetWindow.h" />
     <ClInclude Include="ChildWindow.h" />
+    <ClInclude Include="DetailWindow.h" />
+    <ClInclude Include="GoalTileNode.h" />
     <ClInclude Include="MacroDef.h" />
     <ClInclude Include="MainProc.h" />
+    <ClInclude Include="MapNode.h" />
     <ClInclude Include="MapProc.h" />
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RouteSimulation.h" />
+    <ClInclude Include="StageWindow.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TileDetailStruct.h" />
     <ClInclude Include="TileNode.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
@@ -167,11 +175,14 @@
     <ClCompile Include="AssetProc.cpp" />
     <ClCompile Include="AssetWindow.cpp" />
     <ClCompile Include="ChildWindow.cpp" />
+    <ClCompile Include="DetailWindow.cpp" />
+    <ClCompile Include="GoalTileNode.cpp" />
     <ClCompile Include="MainProc.cpp" />
     <ClCompile Include="MapProc.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="RouteSimulation.cpp" />
+    <ClCompile Include="StageWindow.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

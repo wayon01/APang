@@ -8,6 +8,7 @@
 #include "MainProc.h"
 #include "ResourceManager.h"
 #include "AssetWindow.h"
+#include "StageWindow.h"
 
 #pragma comment (lib, "Comctl32.lib")
 #define _CRT_SECURE_NO_WARNINGS
@@ -22,8 +23,10 @@ WCHAR szTitle[MAX_LOADSTRING]; // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING]; // 기본 창 클래스 이름입니다.
 
 HWND hToolBar;
-RenderWindow renderWindow;
+DetailWindow detailWindow;
+RenderWindow renderWindow(detailWindow);
 AssetWindow assetWindow;
+StageWindow stageWindow(detailWindow);
 ChildWindow childWindow[4];
 
 MainProc* mainProc;
@@ -159,6 +162,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		case IDM_ADDASSET:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ADDASSETDIG), hWnd, AddAssetDig);
 			break;
+		case IDM_ADDAREA: {
+			MapVector tmp = new MapNode();
+			tmp->id = RESMGR->GetMapProc()->GetMapStage().size();
+			RESMGR->GetMapProc()->MapStagePushBack(tmp->id, tmp);
+			stageWindow.LoadStageList();
+			RESMGR->SetTitleUnSaved();
+		}
+			break;
 		case IDM_EXIT:
 			DestroyWindow(hWnd);
 			break;
@@ -183,10 +194,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 						return DefWindowProc(hWnd, message, wParam, lParam);
 					}
 				}
-				RESMGR->GetMapProc()->ClearMap();
+				RESMGR->GetMapProc()->ClearAllMap();
 				mainProc->setFilePath(lpstrFile);
 				mainProc->ReadMapFile();
+				stageWindow.LoadStageList();
 				SetWindowTextA(hWnd, mainProc->getTitleName().c_str());
+				RESMGR->SetTitleSaved();
+				detailWindow.LoadCurrentTileInfo();
 			}
 		}
 				 break;
@@ -208,11 +222,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		mainProc = new MainProc();
 		RESMGR->SetMainProc(mainProc);
 		SetWindowTextA(hWnd, mainProc->getTitleName().c_str());
+		renderWindow.m_detailWindow = detailWindow;
 		renderWindow.Create(hInst, WindowSize.left, WindowSize.top + 30, WindowSize.right / 2, WindowSize.bottom / 2, hWnd);
 		renderWindow.SetWindowColor(0xffffff);
 		assetWindow.Create(hInst, WindowSize.right / 2, WindowSize.top + 30, WindowSize.right / 2, WindowSize.bottom / 2, hWnd);
-		childWindow[2].Create(hInst, WindowSize.left, WindowSize.bottom / 2, WindowSize.right / 2, WindowSize.bottom / 2 - 30, hWnd);
-		childWindow[3].Create(hInst, WindowSize.right / 2, WindowSize.bottom / 2, WindowSize.right / 2, WindowSize.bottom / 2 - 30, hWnd);
+		detailWindow.Create(hInst, WindowSize.left, WindowSize.bottom / 2, WindowSize.right / 2, WindowSize.bottom / 2 - 30, hWnd);
+		stageWindow.Create(hInst, WindowSize.right / 2, WindowSize.bottom / 2, WindowSize.right / 2, WindowSize.bottom / 2 - 30, hWnd);
 		InitToolbar(hWnd);
 		//HWND childHwnd = CreateWindowEx(WS_EX_CLIENTEDGE, szWindowClass, NULL, WS_CHILD | WS_VISIBLE, 0, 300, 300, 300, hWnd, NULL, hInst, NULL);
 
@@ -226,8 +241,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		GetClientRect(hWnd, &WindowSize);
 		renderWindow.SetWindowSize(WindowSize.left, WindowSize.top + 30, WindowSize.right  * (2 / 3.0f), WindowSize.bottom * (2 / 3.0f));
 		assetWindow.SetWindowSize(WindowSize.right  * (2 / 3.0f), WindowSize.top + 30, WindowSize.right / 3, WindowSize.bottom / 2);
-		childWindow[2].SetWindowSize(WindowSize.left, WindowSize.bottom * (2 / 3.0f), WindowSize.right  * (2 / 3.0f), WindowSize.bottom / 3);
-		childWindow[3].SetWindowSize(WindowSize.right  * (2 / 3.0f), WindowSize.bottom / 2, WindowSize.right / 3, WindowSize.bottom / 2);
+		detailWindow.SetWindowSize(WindowSize.left, WindowSize.bottom * (2 / 3.0f), WindowSize.right  * (2 / 3.0f), WindowSize.bottom / 3);
+		stageWindow.SetWindowSize(WindowSize.right  * (2 / 3.0f), WindowSize.bottom / 2, WindowSize.right / 3, WindowSize.bottom / 2);
 
 	}
 				  break;

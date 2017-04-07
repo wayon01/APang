@@ -79,7 +79,7 @@ LRESULT RenderWindow::OnCreate(HWND hWnd, WPARAM wParam, LPARAM lParam) {
 
 
 
-	renderThread = std::thread([&] { OnFrame(); });
+	renderThread = std::thread([&] { OnFrame(hWnd); });
 	m_curRotationY = -90;
 
 	return 0;
@@ -208,6 +208,8 @@ LRESULT RenderWindow::OnKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam) {
 		RESMGR->GetMapProc()->DeleteTile(cur.x, cur.y, cur.z);
 	}
 
+	m_detailWindow.LoadCurrentTileInfo();
+
 	return 0;
 }
 
@@ -251,7 +253,7 @@ LRESULT RenderWindow::OnDefault(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPara
 }
 
 
-void RenderWindow::OnFrame() {
+void RenderWindow::OnFrame(HWND _hWnd) {
 
 	hdc = GetDC(hWnd);
 	PIXELFORMATDESCRIPTOR pfd;
@@ -266,7 +268,11 @@ void RenderWindow::OnFrame() {
 	pfd.cColorBits = 32;
 
 	nPixelFormat = ChoosePixelFormat(hdc, &pfd);
+
+#ifdef NDEBUG
 	SetPixelFormat(hdc, nPixelFormat, &pfd);
+#endif
+	
 
 	hrc = wglCreateContext(hdc);
 	wglMakeCurrent(hdc, hrc);
@@ -335,6 +341,9 @@ void RenderWindow::Render(float elapsedTime) const {
 
 	glEnable(GL_DEPTH_TEST);
 
+	if(RESMGR->GetMapProc()->isEmptyStage()) {
+		glEnable(GL_DEPTH_TEST);
+	}
 	const auto tiles = RESMGR->GetMapProc()->GetTiles();
 
 	glPushMatrix();
@@ -433,18 +442,19 @@ void RenderWindow::Update(float elapsedTime) {
 	}
 
 
-	if (!RESMGR->GetMapProc()->b_isMapSizeChanged) return;
-
 	vec3 mapSize = RESMGR->GetMapProc()->getMapSize();
 
 	mapSizePos.x = (mapSize.x * TILE_SIZE) / 2.f + TILE_SIZE / 2;
 	mapSizePos.y = (mapSize.y * TILE_SIZE) / 2.f + TILE_SIZE / 2;
 	mapSizePos.z = (mapSize.z * TILE_SIZE) / 2.f + TILE_SIZE / 2;
 
+	
+
+
 }
 
 
-RenderWindow::RenderWindow() {
+RenderWindow::RenderWindow(DetailWindow& detail_window) : ChildWindow(), m_detailWindow(detail_window) {
 }
 
 

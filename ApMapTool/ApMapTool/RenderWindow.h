@@ -3,6 +3,7 @@
 #include <thread>
 #include "Vector.h"
 #include <GL/glew.h>
+#include "DetailWindow.h"
 
 class TileNode;
 
@@ -15,11 +16,11 @@ protected:
 	LRESULT OnDestroy(HWND hWnd, WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnMouseWheel(HWND hWnd, WPARAM wParam, LPARAM lParam) override;
 	LRESULT OnDefault(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) override;
-	void OnFrame();
+	void OnFrame(HWND _hWnd);
 	void Render(float elapsedTime) const;
 	void Update(float elapsedTime);
 public:
-	RenderWindow();
+	RenderWindow(DetailWindow& detail_window);
 	~RenderWindow();
 
 	int Create(HINSTANCE hInstance, int x, int y, int width, int height,
@@ -79,4 +80,5 @@ private:
 
 public:
 	float m_sensitivity = 0.5f;
+	DetailWindow& m_detailWindow;
 };

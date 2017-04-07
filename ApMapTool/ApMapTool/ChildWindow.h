@@ -1,7 +1,7 @@
 #pragma once
 class ChildWindow {
 protected:
-	HWND hWnd; // 생성된 윈도우 핸들.
+	HWND hWnd = nullptr; // 생성된 윈도우 핸들.
 	HINSTANCE hInst;
 	static int bRegisterClass; //윈도우클래스(WNDCLASS)가 등록되었는지 나타내는 변수.
 	int Color; // 0이면 파란색, 1이면 빨간색 배경.

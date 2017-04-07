@@ -14,13 +14,49 @@ ResourceManager::~ResourceManager() {
 
 void ResourceManager::SetTile(int id, int x, int y, int z) const {
 
-	m_mapProc->SetTile(id, x, y, z);
+	if(id == RESMGR->GetAssetProc()->getGoalId()) {
+		m_mapProc->SetTile(id, x, y, z, -1);
+	}else {
+		m_mapProc->SetTile(id, x, y, z);
+	}
+	
 
+}
+
+
+void ResourceManager::SetTile(int stageId, int id, std::vector<std::string> value) const {
+	int id__ = m_mapProc->GetStageId();
+
+	int x = std::atoi(value[1].c_str());
+	int y = std::atoi(value[2].c_str());
+	int z = std::atoi(value[3].c_str());
+
+	m_mapProc->SetStageId(stageId);
+
+	if(value[0] == "GoalTile") {
+		if(value.size() == 5)
+			m_mapProc->SetTile(id, x, y, z, std::atoi(value[4].c_str()));
+		else
+			m_mapProc->SetTile(id, x, y, z, -1);
+	}else {
+		m_mapProc->SetTile(id, x, y, z);
+	}
+	
+	m_mapProc->SetStageId(id__);
 }
 
 
 void ResourceManager::SetMapSize(int x, int y, int z) const {
 	m_mapProc->SetMapSize(x, y, z);
+}
+
+
+void ResourceManager::SetMapSize(int stageId, int x, int y, int z) const {
+	int id = m_mapProc->GetStageId();
+	m_mapProc->SetStageId(stageId);
+	m_mapProc->SetMapSize(x, y, z);
+	m_mapProc->SetStageId(id);
+
 }
 
 

@@ -24,14 +24,19 @@ public class GameSystemMgr : MonoBehaviour {
 
     private Vector3 selectedTilePosition;
     private Vector3 prevPlayerPosition;
+    private Vector3 lerpedPosition;
     private float prevPlayerStartTime;
 
     private Vector3 mapLength;
+
+    private float MovingTime;
+    private Quaternion PlayerLocalRotation;
 
 	// Use this for initialization
 	void Start () {
 	    tileMgr = TileManager.GetComponent<TileMgr>();
 	    Player = PlayerObject.GetComponent<APlayer>();
+	    PlayerLocalRotation = Player.transform.rotation;
 	    cameraMgr = tileMgr.CameraManager.GetComponent<CameraMgr>();
         mapLength = Vector3.zero;
 
@@ -39,14 +44,17 @@ public class GameSystemMgr : MonoBehaviour {
 	    isCleared = false;
 	    isFailed = false;
 	    m_playerMovingCount = 0;
+
+	    MovingTime = 1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	    if (isPlayerMoving) {
-            OnPlayerMove();
+	        OnPlayerMove();
 	        return;
 	    }
+
         if (tileMgr.isClicked) {
             OnSelected();
 	        tileMgr.isClicked = false;
@@ -59,14 +67,18 @@ public class GameSystemMgr : MonoBehaviour {
 
     void LateUpdate() {
         if (isPlayerMovingUp) {
+            Player.animator.SetBool("isRun", false);
+            Player.animator.SetBool("isLand", false);
+            Player.animator.SetBool("isJump", false);
             isPlayerMovingUp = false;
 
         }
 
-        if (prevPlayerStartTime >= 1) {
+        if (prevPlayerStartTime >= MovingTime) {
             prevPlayerStartTime = 0;
             isPlayerMovingUp = true;
             isPlayerMoving = false;
+            Player.transform.position = selectedTilePosition;
         }
     }
 
@@ -87,6 +99,48 @@ public class GameSystemMgr : MonoBehaviour {
         prevPlayerPosition = Player.transform.position;
         prevPlayerStartTime = 0;
         isPlayerMoving = true;
+
+        bool isFront = false;
+        switch ((int)cameraMgr.FinalRotationY) {
+            case 0:
+            case 90:
+                isFront = true;
+                break;
+            case 180:
+            case -90:
+                isFront = false;
+                break;
+        }
+
+        if (Math.Abs((int)cameraMgr.FinalRotationY) != 90) {
+            bool tmp = Player.transform.position.x - selectedTilePosition.x > 0;
+
+            if (!isFront) {
+                lerpedPosition = new Vector3((tmp
+                    ? 1
+                    : -1), 0, tmp ? 0 : 2);
+            }
+            else {
+                lerpedPosition = new Vector3((tmp
+                                 ? 1
+                                 : -1), 0, tmp ? -2 : 0);
+            }
+        }
+        else {
+            bool tmp = Player.transform.position.z - selectedTilePosition.z > 0;
+
+            if (!isFront) {
+                lerpedPosition = new Vector3(tmp ? 2 : 0, 0, (tmp
+                                 ? 1
+                                 : -1));
+            }
+            else {
+                lerpedPosition = new Vector3(tmp ? 0 : -2, 0, (tmp
+                                 ? 1
+                                 : -1));
+            }
+            
+        }
 
         Text textObj = GameObject.Find("PlayerMovngCountText").GetComponent<Text>();
         textObj.text = "이동횟수 : " + m_playerMovingCount;
@@ -116,7 +170,8 @@ public class GameSystemMgr : MonoBehaviour {
             mapLength = tileMgr.GetIdLength();
         }
 
-        GameObject tmpTile;
+
+        GameObject tmpTile = null;
 
         //클릭한 타일 위에 다른 타일이 있을 경우 예외처리
         if (clickedTileId.y < mapLength.y - 1) {
@@ -147,10 +202,12 @@ public class GameSystemMgr : MonoBehaviour {
 
                 //x축 기준 조건이 맞는 경우
                 if (isPositionX && Math.Abs(clickedTileId.x - Player.positionId.x) <= 1) {
+                    Player.animator.SetBool("isJump", true);
                     return true;
                 }
                 //z축 기준 조건이 맞는 경우
                 else if (!isPositionX && Math.Abs(clickedTileId.z - Player.positionId.z) <= 1) {
+                    Player.animator.SetBool("isJump", true);
                     return true;
                 }
                 //조건에 만족하지 않는 경우
@@ -165,12 +222,14 @@ public class GameSystemMgr : MonoBehaviour {
 
             //x축 기준 조건이 맞는 경우
             if (isPositionX && gap <= 1 && gap > 0) {
+                Player.animator.SetBool("isRun", true);
                 return true;
             }
 
             gap = Math.Abs(clickedTileId.z - Player.positionId.z);
             //z축 기준 조건이 맞는 경우
             if (!isPositionX && gap <= 1 && gap > 0) {
+                Player.animator.SetBool("isRun", true);
                 return true;
             }
             //조건에 만족하지 않는 경우
@@ -181,15 +240,34 @@ public class GameSystemMgr : MonoBehaviour {
         //플레이어 아래
         else if(heightLevel == -1) {
             Vector3 tempTile = clickedTileId + new Vector3(0, 2, 0);
+
+            //플레이어 옆이 제한 높이보다 높을 경우
+            if (tempTile.y > mapLength.y - 1) {
+                //x축 기준 조건이 맞는 경우
+                if (isPositionX && Math.Abs(clickedTileId.x - Player.positionId.x) <= 1) {
+                    Player.animator.SetBool("isLand", true);
+                    return true;
+                }
+                //z축 기준 조건이 맞는 경우
+                if (!isPositionX && Math.Abs(clickedTileId.z - Player.positionId.z) <= 1) {
+                    Player.animator.SetBool("isLand", true);
+                    return true;
+                }
+                //조건에 만족하지 않는 경우
+                return false;
+            }
+
             //플레이어 옆에 있는 장애물이 존재하지 않을 경우
             tmpTile = tileMgr.GetSurfaceTile(isPositionX, isFront, tempTile);
             if (tempTile.y > mapLength.y - 1 || tmpTile == null || tmpTile.GetComponent<TileObject>().IsCanPlayerIgnoreBlock()) {
                 //x축 기준 조건이 맞는 경우
                 if (isPositionX && Math.Abs(clickedTileId.x - Player.positionId.x) <= 1) {
+                    Player.animator.SetBool("isLand", true);
                     return true;
                 }
                 //z축 기준 조건이 맞는 경우
                 else if (!isPositionX && Math.Abs(clickedTileId.z - Player.positionId.z) <= 1) {
+                    Player.animator.SetBool("isLand", true);
                     return true;
                 }
                 //조건에 만족하지 않는 경우
@@ -206,11 +284,36 @@ public class GameSystemMgr : MonoBehaviour {
 
     private void OnPlayerMove() {
         Vector3 playerPos = prevPlayerPosition;
-        prevPlayerStartTime += Time.deltaTime;
+        prevPlayerStartTime += Time.deltaTime * 1.5f;
 
-        Player.transform.position = new Vector3(Mathf.Lerp(playerPos.x, selectedTilePosition.x, prevPlayerStartTime),
+        bool run = Player.animator.GetBool("isRun");
+        bool land = Player.animator.GetBool("isLand");
+        bool jump = Player.animator.GetBool("isJump");
+        bool isPositionX = Math.Abs((int)cameraMgr.FinalRotationY) != 90;
+
+
+        Vector3 dir = Player.transform.position - selectedTilePosition;
+        Quaternion lookRot = Quaternion.LookRotation(lerpedPosition);
+        lookRot.x = 0; lookRot.z = 0;
+        Player.transform.rotation = Quaternion.Slerp(Player.transform.rotation, lookRot, 0.1f);
+
+        
+
+        if (jump) {
+            Player.transform.position = new Vector3(Mathf.Lerp(playerPos.x, selectedTilePosition.x, prevPlayerStartTime),
+            Mathf.Lerp(playerPos.y, playerPos.y + ( -(1 / (9 * (prevPlayerStartTime + 0.1f))) + 1.1f) + Mathf.Sin(prevPlayerStartTime * Mathf.PI) * 0.1f, 1),
+            Mathf.Lerp(playerPos.z, selectedTilePosition.z, prevPlayerStartTime));
+        }else if (land) {
+            Player.transform.position = new Vector3(Mathf.Lerp(playerPos.x, selectedTilePosition.x * Mathf.Sin(prevPlayerStartTime / 2 * Mathf.PI), prevPlayerStartTime),
+            Mathf.Lerp(playerPos.y, selectedTilePosition.y + Mathf.Sin(prevPlayerStartTime * Mathf.PI) * 1.5f, prevPlayerStartTime),
+            Mathf.Lerp(playerPos.z, selectedTilePosition.z * Mathf.Sin(prevPlayerStartTime / 2 * Mathf.PI), prevPlayerStartTime));
+        }
+        else if(run){
+            Player.transform.position = new Vector3(Mathf.Lerp(playerPos.x, selectedTilePosition.x, prevPlayerStartTime),
             Mathf.Lerp(playerPos.y, selectedTilePosition.y, prevPlayerStartTime),
             Mathf.Lerp(playerPos.z, selectedTilePosition.z, prevPlayerStartTime));
+        }
+        
 
     }
 

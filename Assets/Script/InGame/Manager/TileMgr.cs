@@ -429,7 +429,7 @@ public class TileMgr : MonoBehaviour {
                     continue;
                 }
                 int tmp = int.Parse(values[1]);
-                stageMgr.AddStageString(stringBuilder.ToString(), stageLength);
+                stageMgr.AddStageString(stringBuilder, stageLength);
                 stageLength = tmp;
                 stringBuilder = new StringBuilder();
                 source = fp.ReadLine();
@@ -449,7 +449,7 @@ public class TileMgr : MonoBehaviour {
         }
 
         if (stringBuilder != null) {
-            stageMgr.AddStageString(stringBuilder.ToString(), stageLength);
+            stageMgr.AddStageString(stringBuilder, stageLength);
         }
 
         fp.Close();
@@ -467,7 +467,7 @@ public class TileMgr : MonoBehaviour {
             }
         }
 
-        StringReader stringReader = stageMgr.GetStageStringReader(stageId);
+        StringReader stringReader = new StringReader(stageMgr.GetStageStringReader(stageId).ToString());
         string[] values;
         string source = stringReader.ReadLine();
 

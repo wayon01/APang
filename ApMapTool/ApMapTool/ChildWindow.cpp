@@ -60,7 +60,7 @@ int ChildWindow::Create(HINSTANCE hInstance, int x, int y, int width, int height
 // 클래스의 멤버 함수로 내장된 윈도우 프로시저. 전역 WndProc로부터 호출됨.
 LRESULT ChildWindow::WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
 	if (this == nullptr) return DefWindowProc(hWnd, Msg, wParam, lParam);
-	if (!isInited) {
+	if (!isInited && hWnd != nullptr) {
 		OnCreate(hWnd, wParam, lParam);
 		isInited = true;
 	}

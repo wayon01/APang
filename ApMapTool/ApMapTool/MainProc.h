@@ -9,7 +9,7 @@ public:
 
 	void setFilePath(std::string path);
 	void ReadMapFile();
-	void SaveMapFile();
+	void SaveMapFile() const;
 
 	std::string getTitleName() const {
 		std::string title = "±«µµ ¾ÓÆÎ ¸ÊÅø - ";

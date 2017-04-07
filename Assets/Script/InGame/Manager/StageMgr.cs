@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using SerializableCollections;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public class StageMgr : MonoBehaviour {
     private TileMgr tileMgr;
 
     private int m_currentStage;
-    private Dictionary<int, StringReader> m_stageString;
+    private Dictionary<int, StringBuilder> m_stageString;
 
     private bool isStageMoved;
     private bool isStageMoving;
@@ -60,14 +61,14 @@ public class StageMgr : MonoBehaviour {
         m_currentStage = id;
     }
 
-    public void AddStageString(string str, int stageId) {
-        if (string.IsNullOrEmpty(str)) return;
-        if (m_stageString == null) m_stageString = new Dictionary<int, StringReader>();
-        m_stageString.Add(stageId, new StringReader(str));
+    public void AddStageString(StringBuilder str, int stageId) {
+        if (string.IsNullOrEmpty(str.ToString())) return;
+        if (m_stageString == null) m_stageString = new Dictionary<int, StringBuilder>();
+        m_stageString.Add(stageId, str);
     }
 
-    public StringReader GetStageStringReader(int index) {
-        return (StringReader) m_stageString[index];
+    public StringBuilder GetStageStringReader(int index) {
+        return (StringBuilder) m_stageString[index];
     }
 
     public void SetStageChanged(int stageId) {

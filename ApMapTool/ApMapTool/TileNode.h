@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector.h"
+#include <map>
 
 class TileNode {
 public:
@@ -16,5 +17,8 @@ public:
 	int z;
 
 	vec3 Position;
+
+	std::map<std::string, bool> m_additionalBooleanType;
+	std::map<std::string, int> m_additionalIntegerType;
 };
 

@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class APlayer : AActor {
 
     public bool isBlocked;
+    public Animator animator;
 
 	// Use this for initialization
 	void Start () {
@@ -24,4 +26,6 @@ public class APlayer : AActor {
     public override void Die() {
         
     }
+
+    
 }

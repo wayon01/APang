@@ -2,6 +2,7 @@
 #include "MainProc.h"
 #include <fstream>
 #include "ResourceManager.h"
+#include "GoalTileNode.h"
 
 
 MainProc::MainProc() {
@@ -29,16 +30,21 @@ void MainProc::ReadMapFile() {
 
 	std::string buf;
 
-	if(getline(fin, buf)) {
-		std::vector<std::string> list;
-		Split(list, replace_all(buf, " ", ""), ",", true);
+	//if(getline(fin, buf)) {
+	//	std::vector<std::string> list;
+	//	Split(list, replace_all(buf, " ", ""), ",", true);
 
-		RESMGR->SetMapSize(std::atoi(list[0].c_str()), std::atoi(list[1].c_str()), std::atoi(list[2].c_str()));
-		buf.clear();
-	} else
-		return;
+	//	RESMGR->SetMapSize(std::atoi(list[0].c_str()), std::atoi(list[1].c_str()), std::atoi(list[2].c_str()));
+	//	buf.clear();
+	//} else
+	//	return;
 
 	AssetProc* asset_proc = RESMGR->GetAssetProc();
+	MapProc* map_proc = RESMGR->GetMapProc();
+
+	int stageLength = 0;
+	int stageCount = 0;
+	bool isStageAvailable = false;
 
 	while(getline(fin, buf)) {
 
@@ -46,8 +52,48 @@ void MainProc::ReadMapFile() {
 
 		std::vector<std::string> lit;
 		Split(lit, replace_all(buf, " ", ""), ",", true);
+
+		//스테이지
+		if(lit[0] == "#STAGE") {
+			//첫 스테이지일 경우
+			if (!isStageAvailable) {
+				//int index;
+				//auto map_stage = map_proc->GetMapStage();
+				stageLength = std::atoi(lit[1].c_str());
+				map_proc->MapStagePushBack(stageLength, new MapNode());
+				//index = map_proc->GetMapStage().size() - 1;
+				isStageAvailable = true;
+				
+
+				map_proc->GetMapStage()[stageLength]->id = stageLength;
+				map_proc->SetStageId(stageLength);
+
+				continue;
+			}
+			//auto& map_stage = map_proc->GetMapStage();
+			int tmp = std::atoi(lit[1].c_str());
+			//int index;
+
+			map_proc->MapStagePushBack(tmp, new MapNode());
+			//index = map_proc->GetMapStage().size() - 1;
+			stageLength = tmp;
+			map_proc->GetMapStage()[tmp]->id = stageLength;
+			map_proc->SetStageId(tmp);
+			stageCount++;
+
+			continue;
+		}
+
+		if(lit.size() == 3) {
+			if (map_proc->GetMapStage().size() == 0) {
+				map_proc->MapStagePushBack(0, new MapNode());
+			}
+			RESMGR->SetMapSize(stageCount, std::atoi(lit[0].c_str()), std::atoi(lit[1].c_str()), std::atoi(lit[2].c_str()));
+			buf.clear();
+			continue;
+		}
 		
-		if(lit.size() != 4) continue;
+		if(lit.size() != 4 && lit[0] != "GoalTile") continue;
 
 		int id = 0;
 		if(lit[0] == "SpawnTile") {
@@ -58,7 +104,10 @@ void MainProc::ReadMapFile() {
 			id = asset_proc->FindTileId(lit[0]);
 		}
 
-		RESMGR->SetTile(id, std::atoi(lit[1].c_str()), std::atoi(lit[2].c_str()), std::atoi(lit[3].c_str()));
+		if(map_proc->GetMapStage().size() == 0) {
+			map_proc->MapStagePushBack(0, new MapNode());
+		}
+		RESMGR->SetTile(stageCount, id, lit);
 		buf.clear();
 	}
 
@@ -67,34 +116,49 @@ void MainProc::ReadMapFile() {
 }
 
 
-void MainProc::SaveMapFile() {
+void MainProc::SaveMapFile() const {
 
 	std::ofstream fout(m_filePath);
 
 	auto mapProc = RESMGR->GetMapProc();
-	auto tiles = mapProc->GetTiles();
-	vec3 mapSize = mapProc->getMapSize() + vec3{ 1, 1, 1 };
+	int stageId = mapProc->GetStageId();
 
-	fout << static_cast<int>(mapSize.x) << ", " << static_cast<int>(mapSize.y) << ", " << static_cast<int>(mapSize.x) << std::endl << std::endl;
+	for(int stage = 0; stage < mapProc->GetMapStage().size(); stage++) {
 
-	AssetProc* asset_proc = RESMGR->GetAssetProc();
+		mapProc->SetStageId(stage);
 
-	for(int i = 0; i < tiles.size(); i++) {
-		auto tile = tiles[i];
+		auto tiles = mapProc->GetTiles();
+		vec3 mapSize = mapProc->getMapSize() + vec3{ 1, 1, 1 };
 
-		std::string id;
+		fout << std::endl << "#STAGE, " << mapProc->GetMapStage()[stage]->id << std::endl;
+		fout << static_cast<int>(mapSize.x) << ", " << static_cast<int>(mapSize.y) << ", " << static_cast<int>(mapSize.z) << std::endl << std::endl;
 
-		id = asset_proc->FindTileIdStr(tile->id);
+		AssetProc* asset_proc = RESMGR->GetAssetProc();
 
-		if(id == "NULL") {
-			id = "NomalTile";
+		for (int i = 0; i < tiles.size(); i++) {
+			auto tile = tiles[i];
+
+			std::string id;
+
+			id = asset_proc->FindTileIdStr(tile->id);
+
+			if (id == "NULL") {
+				id = "NomalTile";
+			}
+
+			if(id == "GoalTile") {
+				GoalTileNode* tmp_goal = static_cast<GoalTileNode*>(tile);
+				fout << id << ", " << tile->x << ", " << tile->y << ", " << tile->z << ", " << tmp_goal->m_additionalIntegerType["Area ID"] << std::endl;
+				continue;
+			}
+			fout << id << ", " << tile->x << ", " << tile->y << ", " << tile->z << std::endl;
 		}
-
-		fout << id << ", " << tile->x << ", " << tile->y << ", " << tile->z << std::endl;
 	}
-
+	
+	fout << "#end" << std::endl;
 	fout.close();
 
+	mapProc->SetStageId(stageId);
 }
 
 
