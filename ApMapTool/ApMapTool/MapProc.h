@@ -4,6 +4,7 @@
 #include "RouteSimulation.h"
 #include <thread>
 #include "MapNode.h"
+#include "TileShortcut.h"
 
 typedef MapNode* MapVector;
 
@@ -15,6 +16,7 @@ public:
 
 	void SetTile(int id, int x, int y, int z);
 	void SetTile(int id, int x, int y, int z, int nextStageId);
+	void SetWarpTile(int id, int x, int y, int z, int nextStageId, std::string name, std::string targetName);
 	void SetMapSize(int x, int y, int z);
 	void RefreshMap();
 	void ClearMap();
@@ -29,6 +31,8 @@ public:
 	}
 
 	TileNode* GetTile(ivec3 posId);
+
+	TileShortcut GetTileShortcut(std::string name);
 
 	std::map<int, MapVector> GetMapStage() const {
 		return m_map_stage;
@@ -83,6 +87,7 @@ private:
 	int m_stageId;
 
 	std::map<int, MapVector> m_map_stage;
+	std::vector<TileShortcut> m_map_shortcut;
 	TileNode* m_curTile;
 
 	RouteSimulation* m_routeSimulation;

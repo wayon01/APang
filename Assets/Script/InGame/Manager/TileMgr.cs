@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Text;
 using UnityEngine;
@@ -22,10 +23,25 @@ public struct TileArea {
     public TileAreaValue[] z;
 }
 
+public struct TileShortcut {
+    public Vector3 pos;
+    public int stage;
+    public string name;
+    public string targetName;
+
+    public TileShortcut(Vector3 _pos, int _stage, string _name, string _targetName) {
+        pos = _pos;
+        stage = _stage;
+        name = _name;
+        targetName = _targetName;
+    }
+}
+
 public class TileMgr : MonoBehaviour {
     private int _lengthX, _lengthY, _lengthZ;
     private GameObject[,,] _mTileMap;
     private TileArea[] m_tileArea;
+    private ArrayList m_tileShortcut;
 
     private Vector3 _mSelectedTileId;
 
@@ -51,6 +67,7 @@ public class TileMgr : MonoBehaviour {
     public GameObject TreeTile = null;
     public GameObject MushroomTile = null;
     public GameObject FountainTile = null;
+    public GameObject PortalTile = null;
 
     public bool isClicked;
     private bool isResetTilePosition;
@@ -65,6 +82,7 @@ public class TileMgr : MonoBehaviour {
         stageMgr = StageManager.GetComponent<StageMgr>();
         MainCamera = _cameraMgr.MainCamera;
         _mSelectedTileId = new Vector3(-1, -1, -1);
+        m_tileShortcut = new ArrayList();
 
         //TemporaryInit();
         string path = "jar:file://" + Application.dataPath + "!/assets/test.map";
@@ -333,6 +351,15 @@ public class TileMgr : MonoBehaviour {
         if (mObject == GoalTile) {
             ((GoalTileObject)obj).SetNextStageId(int.Parse(additional_val[0]));
         }
+        else if (mObject == PortalTile) {
+            TileShortcut tmp = FindTileShortcut(additional_val[2]);
+            if (tmp.name == null) return true;
+
+            ((PortalTile)obj).SetTargetStage(tmp.stage);
+            ((PortalTile)obj).SetTargetTileId(tmp.pos);
+        }
+
+
 
         return true;
     }
@@ -443,6 +470,18 @@ public class TileMgr : MonoBehaviour {
                 }
                 stringBuilder.AppendLine(source);
             }
+
+            //포탈타일
+            if (values[0] == "PortalTile") {
+                TileShortcut tmp = new TileShortcut(new Vector3(int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3])),
+                    stageLength, values[5], values[6]);
+                m_tileShortcut.Add(tmp);
+
+                if (stringBuilder == null) {
+                    stringBuilder = new StringBuilder();
+                }
+                stringBuilder.AppendLine(source);
+            }
             //ParseTile(values);
 
             source = fp.ReadLine();
@@ -522,7 +561,7 @@ public class TileMgr : MonoBehaviour {
 
     private void ParseTile(string[] values) {
 
-        if (values.Length != 4 && values[0] != "GoalTile") {
+        if (values.Length < 4) {
             return;
         }
 
@@ -541,6 +580,11 @@ public class TileMgr : MonoBehaviour {
                     SetTile(tileObject, int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3]), values[4]);
                     return;
                 }
+                break;
+            }
+            case "PortalTile": {
+                tileObject = PortalTile;
+                SetTile(tileObject, int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3]), values[4], values[5], values[6]);
                 break;
             }
             case "FireTile":
@@ -567,27 +611,39 @@ public class TileMgr : MonoBehaviour {
         SetTile(tileObject, int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3]));
     }
 
-    private void TemporaryInit() {
-        SetMapSize(7, 6, 5);
+    private TileShortcut FindTileShortcut(string name) {
+        for (int i = 0; i < m_tileShortcut.Count; i++) {
+            TileShortcut tmp = (TileShortcut)m_tileShortcut[i];
 
-        SetTile(SpawnTile, 0, 0, 0);
-        SetTile(GrassTile, 1, 0, 1);
-        SetTile(GrassTile, 2, 0, 0);
-        SetTile(NomalTile, 3, 1, 4);
-        SetTile(NomalTile, 0, 0, 2);
-
-        SetTile(GrassTile, 1, 4, 1);
-        SetTile(GrassTile, 1, 4, 2);
-        SetTile(GrassTile, 2, 5, 4);
-        SetTile(GoalTile, 3, 5, 4);
-
-        SetTile(NomalTile, 4, 2, 3);
-        
-        SetTile(FireTile, 4, 3, 0);
-        SetTile(NomalTile, 4, 2, 0);
-        SetTile(NomalTile, 3, 3, 0);
-
-
-        SetTile(FireTile, 6, 0, 0);
+            if (tmp.name == name) {
+                return tmp;
+            }
+        }
+        return new TileShortcut(-Vector3.one, -1, null, null);
     }
+
+
+    //private void TemporaryInit() {
+    //    SetMapSize(7, 6, 5);
+
+    //    SetTile(SpawnTile, 0, 0, 0);
+    //    SetTile(GrassTile, 1, 0, 1);
+    //    SetTile(GrassTile, 2, 0, 0);
+    //    SetTile(NomalTile, 3, 1, 4);
+    //    SetTile(NomalTile, 0, 0, 2);
+
+    //    SetTile(GrassTile, 1, 4, 1);
+    //    SetTile(GrassTile, 1, 4, 2);
+    //    SetTile(GrassTile, 2, 5, 4);
+    //    SetTile(GoalTile, 3, 5, 4);
+
+    //    SetTile(NomalTile, 4, 2, 3);
+        
+    //    SetTile(FireTile, 4, 3, 0);
+    //    SetTile(NomalTile, 4, 2, 0);
+    //    SetTile(NomalTile, 3, 3, 0);
+
+
+    //    SetTile(FireTile, 6, 0, 0);
+    //}
 }

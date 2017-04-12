@@ -163,12 +163,15 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RouteSimulation.h" />
+    <ClInclude Include="SpawnTileNode.h" />
     <ClInclude Include="StageWindow.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TileDetailStruct.h" />
     <ClInclude Include="TileNode.h" />
+    <ClInclude Include="TileShortcut.h" />
     <ClInclude Include="Vector.h" />
+    <ClInclude Include="WarpTileNode.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApMapTool.cpp" />
@@ -182,6 +185,7 @@
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="RouteSimulation.cpp" />
+    <ClCompile Include="SpawnTileNode.cpp" />
     <ClCompile Include="StageWindow.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -190,6 +194,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TileNode.cpp" />
+    <ClCompile Include="WarpTileNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ApMapTool.rc" />

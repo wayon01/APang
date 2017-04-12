@@ -208,6 +208,19 @@ LRESULT RenderWindow::OnKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam) {
 		RESMGR->GetMapProc()->DeleteTile(cur.x, cur.y, cur.z);
 	}
 
+	if(GetAsyncKeyState(VK_RETURN) & 0x8001) {
+		ivec3 pos = ivec3{ cur.x, cur.y, cur.z };
+		auto tmp = map->GetTile(pos);
+		if(tmp != nullptr && tmp->id == RESMGR->GetAssetProc()->getPortalId()) {
+			auto target = map->GetTileShortcut(tmp->m_additionalStringType["이동할 타일 이름"]);
+			if(target.tile != nullptr && target.stage != -1) {
+				map->SetStageId(target.stage);
+				map->SetCurTile(target.pos);
+
+			}
+		}
+	}
+
 	m_detailWindow.LoadCurrentTileInfo();
 
 	return 0;

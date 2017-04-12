@@ -41,6 +41,10 @@ public:
 		return m_goalId;
 	}
 
+	int getPortalId() const {
+		return m_portalId;
+	}
+
 	int* getTextureId(int index) {
 		return m_assetList[index].m_textureId;
 	}
@@ -79,6 +83,7 @@ private:
 	std::vector<int> m_decorationId;
 	int m_spawnId;
 	int m_goalId;
+	int m_portalId;
 
 	int m_curId = 0;
 

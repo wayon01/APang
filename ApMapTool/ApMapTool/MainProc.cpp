@@ -3,6 +3,7 @@
 #include <fstream>
 #include "ResourceManager.h"
 #include "GoalTileNode.h"
+#include "WarpTileNode.h"
 
 
 MainProc::MainProc() {
@@ -93,13 +94,16 @@ void MainProc::ReadMapFile() {
 			continue;
 		}
 		
-		if(lit.size() != 4 && lit[0] != "GoalTile") continue;
+		if (lit.size() < 4) continue;
+
 
 		int id = 0;
 		if(lit[0] == "SpawnTile") {
 			id = asset_proc->getSpawnId();
 		} else if (lit[0] == "GoalTile") {
 			id = asset_proc->getGoalId();
+		} else if (lit[0] == "PortalTile") {
+			id = asset_proc->getPortalId();
 		} else {
 			id = asset_proc->FindTileId(lit[0]);
 		}
@@ -149,6 +153,12 @@ void MainProc::SaveMapFile() const {
 			if(id == "GoalTile") {
 				GoalTileNode* tmp_goal = static_cast<GoalTileNode*>(tile);
 				fout << id << ", " << tile->x << ", " << tile->y << ", " << tile->z << ", " << tmp_goal->m_additionalIntegerType["Area ID"] << std::endl;
+				continue;
+			}
+
+			if(id == "PortalTile") {
+				WarpTileNode* tmp_warp = static_cast<WarpTileNode*>(tile);
+				fout << id << ", " << tile->x << ", " << tile->y << ", " << tile->z << ", " << tmp_warp->m_additionalIntegerType["Area ID"] << ", " << tmp_warp->m_additionalStringType["타일 이름"] << ", " << tmp_warp->m_additionalStringType["이동할 타일 이름"] << std::endl;
 				continue;
 			}
 			fout << id << ", " << tile->x << ", " << tile->y << ", " << tile->z << std::endl;

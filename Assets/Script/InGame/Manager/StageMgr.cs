@@ -17,6 +17,7 @@ public class StageMgr : MonoBehaviour {
     private bool isStageMoved;
     private bool isStageMoving;
     private Vector3 cameraPos;
+    private Vector3 playerPos;
 
     // Use this for initialization
     void Start () {
@@ -26,6 +27,7 @@ public class StageMgr : MonoBehaviour {
 	    isStageMoved = false;
         isStageMoving = false;
         cameraPos = Vector3.zero;
+        playerPos = -Vector3.one;
     }
 	
 	// Update is called once per frame
@@ -37,6 +39,10 @@ public class StageMgr : MonoBehaviour {
 	            cameraPos.x = 0;
                 tileMgr.SettingMap(m_currentStage);
                 isStageMoved = false;
+	            if (playerPos != -Vector3.one) {
+	                SetPlayerPosition();
+	                playerPos = -Vector3.one;
+	            }
 	        }else
 	            cameraPos.x = -16;
 	    }
@@ -79,5 +85,17 @@ public class StageMgr : MonoBehaviour {
         //tileMgr.SettingMap(stageId);
         cameraPos = MainCamera.transform.localPosition;
         tileMgr.GameSystemManager.GetComponent<GameSystemMgr>().isCleared = false;
+    }
+
+    public void SetPlayerId(Vector3 id) {
+        playerPos = id;
+    }
+
+    private void SetPlayerPosition() {
+        AActor player = GameObject.Find("player").GetComponent<AActor>();
+
+        player.Position = tileMgr.GetTile(playerPos).GetComponent<TileObject>().Position + new Vector3(0, 0.5f, 0);
+        player.positionId = playerPos;
+        player.resetPosition();
     }
 }

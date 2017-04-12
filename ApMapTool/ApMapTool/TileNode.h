@@ -20,5 +20,6 @@ public:
 
 	std::map<std::string, bool> m_additionalBooleanType;
 	std::map<std::string, int> m_additionalIntegerType;
+	std::map<std::string, std::string> m_additionalStringType;
 };
 

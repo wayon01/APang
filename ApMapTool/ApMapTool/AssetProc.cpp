@@ -5,7 +5,7 @@
 #include "MacroDef.h"
 
 
-AssetProc::AssetProc(): m_spawnId(TILE_NONE), m_goalId(TILE_NONE) {
+AssetProc::AssetProc(): m_spawnId(TILE_NONE), m_goalId(TILE_NONE), m_portalId(TILE_NONE) {
 	m_curId = 0;
 }
 
@@ -117,6 +117,12 @@ void AssetProc::SetTileId(std::string name, std::string strId, std::string fileP
 	if(strId == "GoalTile" || strId == "goalTile" || strId == "goal tile") {
 		m_assetList.push_back(ASSETINFO{ m_curId, name, "GoalTile", filePath });
 		m_goalId = m_curId;
+		return;
+	}
+
+	if (strId == "PortalTile" || strId == "portalTile" || strId == "portal tile") {
+		m_assetList.push_back(ASSETINFO{ m_curId, name, "PortalTile", filePath });
+		m_portalId = m_curId;
 		return;
 	}
 

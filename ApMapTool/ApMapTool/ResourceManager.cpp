@@ -16,7 +16,9 @@ void ResourceManager::SetTile(int id, int x, int y, int z) const {
 
 	if(id == RESMGR->GetAssetProc()->getGoalId()) {
 		m_mapProc->SetTile(id, x, y, z, -1);
-	}else {
+	} else if (id == RESMGR->GetAssetProc()->getPortalId()) {
+		m_mapProc->SetWarpTile(id, x, y, z, -1, "No Name", "No Target");
+	} else {
 		m_mapProc->SetTile(id, x, y, z);
 	}
 	
@@ -38,7 +40,9 @@ void ResourceManager::SetTile(int stageId, int id, std::vector<std::string> valu
 			m_mapProc->SetTile(id, x, y, z, std::atoi(value[4].c_str()));
 		else
 			m_mapProc->SetTile(id, x, y, z, -1);
-	}else {
+	} else if (value[0] == "PortalTile") {
+		m_mapProc->SetWarpTile(id, x, y, z, std::atoi(value[4].c_str()), value[5], value[6]);
+	} else {
 		m_mapProc->SetTile(id, x, y, z);
 	}
 	

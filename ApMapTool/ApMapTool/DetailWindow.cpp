@@ -47,12 +47,25 @@ LRESULT DetailWindow::OnDefault(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPara
 						break;
 					}
 					}
-				}
+				} else if (tmp.id == ID_STRING) {
+					switch (HIWORD(wParam)) {
+					case EN_CHANGE: {
+						char str[128];
+						GetWindowTextA(tmp.value, str, 128);
+						SetWindowTextA(hWnd, str);
 
+						m_currentTile->m_additionalStringType[tmp.strName] = str;
+						RESMGR->SetTitleUnSaved();
+
+						break;
+					}
+					}
+
+				}
 			}
 		}
-		}
 		break;
+	}
 	}
 	return DefWindowProc(hWnd, Msg, wParam, lParam);
 
@@ -97,6 +110,25 @@ void DetailWindow::LoadCurrentTileInfo() {
 		SetWindowTextA(tmp.value, std::to_string(pair.second).c_str());
 
 		tmp.id = ID_INT;
+
+		m_detail.push_back(tmp);
+
+		y += 25;
+	}
+
+	for (const auto& pair : m_currentTile->m_additionalStringType) {
+		TileDetail tmp;
+
+		tmp.name = CreateWindowA("static", pair.first.c_str(), WS_CHILD | WS_VISIBLE,
+			x, y, WindowRect.right, WindowRect.bottom, hWnd, (HMENU)-1, hInst, NULL);
+		tmp.strName = pair.first;
+
+		int sx = x + pair.first.size() * 10;
+		tmp.value = CreateWindowA("edit", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER
+			, sx, y, sx + 200, 25, hWnd, (HMENU)m_detail.size(), hInst, NULL);
+		SetWindowTextA(tmp.value, pair.second.c_str());
+
+		tmp.id = ID_STRING;
 
 		m_detail.push_back(tmp);
 

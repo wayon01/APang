@@ -5,6 +5,7 @@
 #define ID_NONE 0
 #define ID_INT 1
 #define ID_BOOL 2
+#define ID_STRING 3
 
 struct TileDetail {
 	HWND name = nullptr;

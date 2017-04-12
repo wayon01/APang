@@ -30,9 +30,11 @@ GrassTile, 1, 0, 5
 GrassTile, 4, 2, 5
 NomalTile, 2, 0, 0
 NomalTile, 2, 4, 1
-FireTile, 1, 3, 2
-FireTile, 3, 3, 2
 GoalTile, 0, 2, 0, 2
+FireTile, 1, 5, 3
+FireTile, 3, 5, 3
+GrassTile, 1, 3, 2
+GrassTile, 3, 3, 2
 
 #STAGE, 2
 6, 5, 6
@@ -41,6 +43,8 @@ GrassTile, 2, 3, 0
 GrassTile, 4, 3, 0
 GrassTile, 1, 3, 0
 SpawnTile, 0, 3, 0
-GoalTile, 5, 3, 4, -1
+GoalTile, 5, 3, 4, 1
 FireTile, 3, 3, 3
+GoalTile, 2, 3, 3, -1
+GoalTile, 4, 3, 3, 0
 #end

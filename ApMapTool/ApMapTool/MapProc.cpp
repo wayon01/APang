@@ -3,6 +3,7 @@
 #include "MacroDef.h"
 #include "ResourceManager.h"
 #include "GoalTileNode.h"
+#include "WarpTileNode.h"
 
 
 MapProc::MapProc(): /*size_x(0), size_y(0), size_z(0),*/ m_curTile(new TileNode(0, 0, 0, 0)) {
@@ -63,6 +64,28 @@ void MapProc::SetTile(int id, int x, int y, int z, int nextStageId) {
 		m_curTile->z = z;
 		SetTilePositionByIdPos(m_curTile, x, y, z);
 	}
+}
+
+
+void MapProc::SetWarpTile(int id, int x, int y, int z, int nextStageId, std::string name, std::string targetName) {
+	if ((x < 0) || (y < 0) || (z < 0)) return;
+	if (x > m_map_stage[m_stageId]->size_x || y > m_map_stage[m_stageId]->size_y || z > m_map_stage[m_stageId]->size_z) return;
+	if (!isNullptr(x, y, z)) return;
+
+	WarpTileNode* tmp = new WarpTileNode(id, x, y, z, nextStageId, name, targetName);
+
+	SetTilePositionByIdPos(tmp, x, y, z);
+
+	m_map_stage[m_stageId]->m_map.push_back(tmp);
+
+	if (id == RESMGR->GetAssetProc()->getSpawnId()) {
+		m_curTile->x = x;
+		m_curTile->y = y;
+		m_curTile->z = z;
+		SetTilePositionByIdPos(m_curTile, x, y, z);
+	}
+
+	m_map_shortcut.push_back(TileShortcut{ ivec3{ x, y, z }, tmp, m_stageId });
 }
 
 
@@ -145,6 +168,20 @@ void MapProc::DeleteTile(int stageId, int x, int y, int z) {
 	for (auto iter = m_map_stage[stageId]->m_map.begin(); iter != m_map_stage[stageId]->m_map.end(); ) {
 		auto tmp = *iter;
 		if (tmp->x == x && tmp->y == y && tmp->z == z) {
+
+			if(tmp->id == RESMGR->GetAssetProc()->getPortalId()) {
+				for (auto iter2 = m_map_shortcut.begin(); iter2 != m_map_shortcut.end(); ) {
+					auto tmp2 = *iter2;
+					auto tmp2Pos = tmp2.pos;
+					if(tmp2Pos == ivec3{x, y, z}) {
+						m_map_shortcut.erase(iter2);
+						break;
+					}
+
+					++iter2;
+				}
+			}
+
 			iter = m_map_stage[stageId]->m_map.erase(iter);
 			SAFE_DELETE(tmp);
 			break;
@@ -180,6 +217,17 @@ TileNode* MapProc::GetTile(ivec3 posId) {
 		++iter;
 	}
 	return nullptr;
+}
+
+
+TileShortcut MapProc::GetTileShortcut(std::string name) {
+	for(auto obj : m_map_shortcut) {
+		if(obj.tile->m_additionalStringType["타일 이름"] == name) {
+			return obj;
+		}
+	}
+
+	return TileShortcut{ ivec3{-1, -1, -1}, nullptr, -1 };
 }
 
 

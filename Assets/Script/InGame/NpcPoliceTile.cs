@@ -16,7 +16,6 @@ public class NpcPoliceTile : AttackTile {
 	
 	// Update is called once per frame
 	void Update () {
-        Quaternion q = Camera.main.transform.rotation;
         if (!Input.GetMouseButtonDown(0) && !Input.GetMouseButton(0))
             transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.1f);
 
@@ -36,6 +35,10 @@ public class NpcPoliceTile : AttackTile {
         if (player.positionId.y + 1 == id.y && player.positionId.x == id.x) {
             gameSystemMgr.isFailed = true;
         }
+    }
+
+    public new void SetRigid(bool activated) {
+        base.SetRigid(activated);
     }
 
     public override void Init() {
