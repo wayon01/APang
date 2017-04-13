@@ -32,6 +32,7 @@ public class StageMgr : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (!tileMgr.isLoad) return;
 
         if (isStageMoved) {
 

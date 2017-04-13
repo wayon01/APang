@@ -18,6 +18,7 @@ public class CameraMgr : MonoBehaviour {
     private Vector2 mouse_delta;
 
     private GameSystemMgr gameSystemMgr;
+    private TileMgr tileMgr;
 
     // Use this for initialization
     void Start() {
@@ -25,10 +26,12 @@ public class CameraMgr : MonoBehaviour {
         Rotation = new Vector2(0, 0);
         mouse_delta = new Vector2(0, 0);
         gameSystemMgr = GameSystemManager.GetComponent<GameSystemMgr>();
+        tileMgr = GameObject.Find("TileManager").GetComponent<TileMgr>();
     }
 
     // Update is called once per frame
     void Update() {
+        if (!tileMgr.isLoad) return;
 
         if (gameSystemMgr.isPlayerMoving) {
             return;

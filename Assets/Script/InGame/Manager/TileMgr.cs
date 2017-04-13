@@ -57,6 +57,7 @@ public class TileMgr : MonoBehaviour {
 
     public GameObject Player;
 
+
     //타일 종류
     public GameObject GrassTile = null;
     public GameObject NomalTile = null;
@@ -70,6 +71,7 @@ public class TileMgr : MonoBehaviour {
     public GameObject PortalTile = null;
 
     public bool isClicked;
+    public bool isLoad;
     private bool isResetTilePosition;
 
     // Use this for initialization
@@ -83,17 +85,22 @@ public class TileMgr : MonoBehaviour {
         MainCamera = _cameraMgr.MainCamera;
         _mSelectedTileId = new Vector3(-1, -1, -1);
         m_tileShortcut = new ArrayList();
+        isLoad = false;
 
         //TemporaryInit();
-        string path = "jar:file://" + Application.dataPath + "!/assets/test.map";
+        string path = "file://" + Application.streamingAssetsPath + "/test.map";
         //ParseAndroid(path);
-        Parse(@"./Assets/Maps/test.map");
-        SettingMap(0);
+
+        //Parse(@"./Assets/Maps/test.map");
+        StartCoroutine(Parse(path));
+        
     }
 
 
     // Update is called once per frame
     void Update() {
+        if (!isLoad) return;
+
         ReshapeTilePosition(_cameraMgr.isRelax, (int)_cameraMgr.FinalRotationY);
         if(!gameSystemMgr.isPlayerMoving)
             OnClickTileObject(_cameraMgr.isRelax);
@@ -408,22 +415,31 @@ public class TileMgr : MonoBehaviour {
         return target.GetComponent<TileObject>().id;
     }
 
-    private void Parse(string mapPath) {
-        if (mapPath.Length == 0) return;
+    private IEnumerator Parse(string mapPath) {
+        if (mapPath.Length == 0) yield return null;
 
-        StreamReader fp = File.OpenText(mapPath);
-        string source = fp.ReadLine();
-        if (source == null) {
-            fp.Close();
-            return;
+        WWW File = new WWW(mapPath);
+        yield return File;
+
+
+        string source;
+        string[] sources = File.text.Split('\n');
+
+        if (sources.Length == 0) {
+            yield return File;
         }
+        
 
-        string[] values;
+        string[] values = sources[0].Split(',');
+
         int stageLength = 0;
         StringBuilder stringBuilder = null;
         bool isStageAvailable = false;
 
-        while (source != null) {
+        int index = 0;
+        //source = sources[index];
+        while (index < sources.Length) {
+            source = sources[index];
             source = source.Replace(" ", "");
             values = source.Split(',');
 
@@ -441,7 +457,8 @@ public class TileMgr : MonoBehaviour {
                     stringBuilder = new StringBuilder();
                 }
                 stringBuilder.AppendLine(source);
-                source = fp.ReadLine();
+                index++;
+                //source = fp.ReadLine();
                 continue;
             }
 
@@ -451,7 +468,8 @@ public class TileMgr : MonoBehaviour {
                 if (!isStageAvailable) {
                     stringBuilder = new StringBuilder();
                     isStageAvailable = true;
-                    source = fp.ReadLine();
+                    index++;
+                    //source = fp.ReadLine();
                     stageLength = int.Parse(values[1]);
                     continue;
                 }
@@ -459,7 +477,8 @@ public class TileMgr : MonoBehaviour {
                 stageMgr.AddStageString(stringBuilder, stageLength);
                 stageLength = tmp;
                 stringBuilder = new StringBuilder();
-                source = fp.ReadLine();
+                index++;
+                //source = fp.ReadLine();
                 continue;
 
             }
@@ -484,14 +503,15 @@ public class TileMgr : MonoBehaviour {
             }
             //ParseTile(values);
 
-            source = fp.ReadLine();
+            index++;
         }
 
         if (stringBuilder != null) {
             stageMgr.AddStageString(stringBuilder, stageLength);
         }
 
-        fp.Close();
+        SettingMap(0);
+        isLoad = true;
     }
 
     public void SettingMap(int stageId) {
@@ -527,14 +547,15 @@ public class TileMgr : MonoBehaviour {
 
     }
 
-    private void ParseAndroid(string mapPath) {
+    private IEnumerator ParseAndroid(string mapPath) {
         WWW File = new WWW(mapPath);
+        yield return File;
 
         string source;
         string[] sources = File.text.Split('\n');
 
         if (sources.Length == 0) {
-            return;
+            yield return File;
         }
 
         //Map Size
