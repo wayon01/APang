@@ -65,6 +65,10 @@ public class GameSystemMgr : MonoBehaviour {
 	    if (isCleared) {
 	        tileMgr.StageManager.GetComponent<StageMgr>().SetStageChanged(m_nextStageId);
 	    }
+
+	    if (isFailed && !Player.animator.GetBool("isArrest")) {
+	        Player.animator.SetBool("isArrest", true);
+	    }
 	}
 
     void LateUpdate() {
@@ -303,7 +307,7 @@ public class GameSystemMgr : MonoBehaviour {
 
         if (jump) {
             Player.transform.position = new Vector3(Mathf.Lerp(playerPos.x, selectedTilePosition.x, prevPlayerStartTime),
-            Mathf.Lerp(playerPos.y, playerPos.y + ( -(1 / (9 * (prevPlayerStartTime + 0.08f))) + 1.1f) + Mathf.Sin(prevPlayerStartTime * Mathf.PI) * 0.1f, 1),
+            Mathf.Lerp(playerPos.y, playerPos.y + ( -(1 / (9 * (prevPlayerStartTime + 0.073f))) + 1.1f) + Mathf.Sin(prevPlayerStartTime * Mathf.PI) * 0.1f, 1),
             Mathf.Lerp(playerPos.z, selectedTilePosition.z, prevPlayerStartTime));
         }else if (land) {
             Player.transform.position = new Vector3(Mathf.Lerp(playerPos.x, selectedTilePosition.x * Mathf.Sin(prevPlayerStartTime / 2 * Mathf.PI), prevPlayerStartTime),

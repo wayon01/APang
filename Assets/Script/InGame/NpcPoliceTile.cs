@@ -4,18 +4,38 @@ using UnityEngine;
 
 public class NpcPoliceTile : AttackTile {
 
+    public Animator animator;
+
     private APlayer player;
     private GameSystemMgr gameSystemMgr;
+    private CameraMgr cameraMgr;
+
+    private bool isMove;
 
     // Use this for initialization
     void Start () {
         player = GameObject.Find("player").GetComponent<APlayer>();
         gameSystemMgr = GameObject.Find("GameSystemManager").GetComponent<GameSystemMgr>();
+        cameraMgr = GameObject.Find("CameraManager").GetComponent<CameraMgr>();
         _bIsCanIgnoreBlock = true;
+        isMove = false;
     }
 	
 	// Update is called once per frame
 	void Update () {
+
+	    if (!isMove && !cameraMgr.isRelax) {
+	        isMove = true;
+            animator.SetBool("isRun", true);
+	    }else if (isMove && cameraMgr.isRelax) {
+	        isMove = false;
+            animator.SetBool("isRun", false);
+	    }
+
+	    if (gameSystemMgr.isFailed && !animator.GetBool("isArrest")) {
+            animator.SetBool("isArrest", true);
+        }
+
         if (!Input.GetMouseButtonDown(0) && !Input.GetMouseButton(0))
             transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.1f);
 

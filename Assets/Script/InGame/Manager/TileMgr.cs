@@ -89,6 +89,7 @@ public class TileMgr : MonoBehaviour {
 
         //TemporaryInit();
         string path = "file://" + Application.streamingAssetsPath + "/test.map";
+        //string path = "jar:file://" + Application.streamingAssetsPath + "!/assets/test.map";
         //ParseAndroid(path);
 
         //Parse(@"./Assets/Maps/test.map");
