@@ -1,0 +1,11 @@
+﻿  RenderWindow.cpp
+d:\programming\unity\앙팡\apmaptool\apmaptool\RenderWindow.h(48): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+RenderWindow.cpp(262): warning C4060: switch문에 'case' 또는 'default' 레이블이 없습니다.
+RenderWindow.cpp(369): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  코드를 생성하고 있습니다.
+  0 of 1732 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    24 functions had inline decision re-evaluated but remain unchanged
+  코드를 생성했습니다.
+  ApMapTool.vcxproj -> D:\Programming\Unity\앙팡\ApMapTool\Release\ApMapTool.exe
+  ApMapTool.vcxproj -> D:\Programming\Unity\앙팡\ApMapTool\Release\ApMapTool.pdb (Full PDB)
