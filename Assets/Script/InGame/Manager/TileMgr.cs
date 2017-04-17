@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 using UnityEngine;
+using Random = System.Random;
 
 public struct TileAreaValue {
     public GameObject front;
@@ -28,12 +29,14 @@ public struct TileShortcut {
     public int stage;
     public string name;
     public string targetName;
+    public Color portalColor;
 
-    public TileShortcut(Vector3 _pos, int _stage, string _name, string _targetName) {
+    public TileShortcut(Vector3 _pos, int _stage, string _name, string _targetName, Color _color) {
         pos = _pos;
         stage = _stage;
         name = _name;
         targetName = _targetName;
+        portalColor = _color;
     }
 }
 
@@ -74,6 +77,8 @@ public class TileMgr : MonoBehaviour {
     public bool isLoad;
     private bool isResetTilePosition;
 
+    private Random rand;
+
     // Use this for initialization
     void Start() {
         isResetTilePosition = true;
@@ -82,10 +87,11 @@ public class TileMgr : MonoBehaviour {
         _cameraMgr = CameraManager.GetComponent<CameraMgr>();
         gameSystemMgr = GameSystemManager.GetComponent<GameSystemMgr>();
         stageMgr = StageManager.GetComponent<StageMgr>();
-        MainCamera = _cameraMgr.MainCamera;
+        MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         _mSelectedTileId = new Vector3(-1, -1, -1);
         m_tileShortcut = new ArrayList();
         isLoad = false;
+        rand = new Random();
 
         //TemporaryInit();
         string path = "file://" + Application.streamingAssetsPath + "/test.map";
@@ -102,6 +108,8 @@ public class TileMgr : MonoBehaviour {
     void Update() {
         if (!isLoad) return;
 
+        if (gameSystemMgr.isPause) return;
+
         ReshapeTilePosition(_cameraMgr.isRelax, (int)_cameraMgr.FinalRotationY);
         if(!gameSystemMgr.isPlayerMoving)
             OnClickTileObject(_cameraMgr.isRelax);
@@ -109,8 +117,10 @@ public class TileMgr : MonoBehaviour {
         if (gameSystemMgr.isPlayerMovingUp) {
             AllReshapeTilePosition((int)_cameraMgr.FinalRotationY);
         }
-
-        if (gameSystemMgr.isCleared && gameSystemMgr.m_nextStageId == -1 || gameSystemMgr.isFailed) {
+        if (gameSystemMgr.isCleared && gameSystemMgr.m_nextStageId == -1) {
+            return;
+        }
+        if (gameSystemMgr.isFailed) {
             for (int x = 0; x < _lengthX; x++) {
                 for (int y = 0; y < _lengthY; y++) {
                     for (int z = 0; z < _lengthZ; z++) {
@@ -364,7 +374,8 @@ public class TileMgr : MonoBehaviour {
             if (tmp.name == null) return true;
 
             ((PortalTile)obj).SetTargetStage(tmp.stage);
-            ((PortalTile)obj).SetTargetTileId(tmp.pos);
+            ((PortalTile)obj).SetTargetTileId(tmp.pos, tmp.portalColor);
+            ((PortalTile)obj).SetPortalColor(tmp.portalColor);
         }
 
 
@@ -493,8 +504,22 @@ public class TileMgr : MonoBehaviour {
 
             //포탈타일
             if (values[0] == "PortalTile") {
+                TileShortcut tmp_trace = FindTargetTileShortcut(values[5]);
+                Color tmp_color;
+                if (tmp_trace.name == null) {
+                    int randRGB = rand.Next(0, 2);
+
+                    float r = randRGB == 0 ? 0.075f : 0.925f * (float)rand.NextDouble() + 0.075f;
+                    float g = randRGB == 1 ? 0.075f : 0.925f * (float)rand.NextDouble() + 0.075f;
+                    float b = randRGB == 2 ? 0.075f : 0.925f * (float)rand.NextDouble() + 0.075f;
+
+                    tmp_color = new Color(r, g, b, 1);
+                }
+                else {
+                    tmp_color = tmp_trace.portalColor;
+                }
                 TileShortcut tmp = new TileShortcut(new Vector3(int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3])),
-                    stageLength, values[5], values[6]);
+                    stageLength, values[5], values[6], tmp_color);
                 m_tileShortcut.Add(tmp);
 
                 if (stringBuilder == null) {
@@ -641,7 +666,20 @@ public class TileMgr : MonoBehaviour {
                 return tmp;
             }
         }
-        return new TileShortcut(-Vector3.one, -1, null, null);
+        return new TileShortcut(-Vector3.one, -1, null, null, Color.black);
+    }
+
+    private TileShortcut FindTargetTileShortcut(string name) {
+        name = name.Replace("\r", "");
+        string targetName;
+        for (int i = 0; i < m_tileShortcut.Count; i++) {
+            TileShortcut tmp = (TileShortcut)m_tileShortcut[i];
+            targetName = tmp.targetName.Replace("\r", "");
+            if (targetName == name) {
+                return tmp;
+            }
+        }
+        return new TileShortcut(-Vector3.one, -1, null, null, Color.black);
     }
 
 
@@ -660,7 +698,7 @@ public class TileMgr : MonoBehaviour {
     //    SetTile(GoalTile, 3, 5, 4);
 
     //    SetTile(NomalTile, 4, 2, 3);
-        
+
     //    SetTile(FireTile, 4, 3, 0);
     //    SetTile(NomalTile, 4, 2, 0);
     //    SetTile(NomalTile, 3, 3, 0);

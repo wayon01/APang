@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.ImageEffects;
 
 public class CameraMgr : MonoBehaviour {
 
-    public Camera MainCamera = null;
+    public GameObject MainCamera = null;
     public Vector2 Rotation;
     public float FinalRotationY = 0f;
     public float Sensitivity = 2f;
@@ -14,24 +15,80 @@ public class CameraMgr : MonoBehaviour {
 
     public bool isRelax = true;
 
+    //private Camera mainCamera;
+
     private Quaternion quaternion;
     private Vector2 mouse_delta;
 
     private GameSystemMgr gameSystemMgr;
     private TileMgr tileMgr;
 
+    private float accrueResultTime = 0;
+    private float accrueStartResultTime = -1;
+    private float cameraBlurSize = 0;
+
     // Use this for initialization
     void Start() {
+        gameSystemMgr = GameSystemManager.GetComponent<GameSystemMgr>();
+        tileMgr = GameObject.Find("TileManager").GetComponent<TileMgr>();
+        Init();
+    }
+
+    public void Init() {
         quaternion = Quaternion.identity;
         Rotation = new Vector2(0, 0);
         mouse_delta = new Vector2(0, 0);
-        gameSystemMgr = GameSystemManager.GetComponent<GameSystemMgr>();
-        tileMgr = GameObject.Find("TileManager").GetComponent<TileMgr>();
+        accrueResultTime = 0;
+        accrueStartResultTime = -1;
     }
 
     // Update is called once per frame
     void Update() {
         if (!tileMgr.isLoad) return;
+
+        if (gameSystemMgr.isCleared || gameSystemMgr.isFailed || gameSystemMgr.isPause) {
+            accrueResultTime += Time.deltaTime;
+
+            if ((gameSystemMgr.isFailed && accrueResultTime > 1f) ||
+                gameSystemMgr.isCleared ||
+                gameSystemMgr.isPause) {
+
+                if (accrueStartResultTime == -1) {
+                    accrueStartResultTime = accrueResultTime;
+                }
+                
+                BlurOptimized tmp = MainCamera.GetComponent<BlurOptimized>();
+                if (!tmp.enabled) tmp.enabled = true;
+                cameraBlurSize = tmp.blurSize = Mathf.Lerp(0, 4, (accrueResultTime - accrueStartResultTime) * 2);
+
+            }
+
+            quaternion.eulerAngles = new Vector3(0, FinalRotationY, 0);
+            transform.rotation = Quaternion.Lerp(transform.rotation, quaternion, Time.deltaTime * 15);
+
+            if (!isRelax) {
+                isRelax = Math.Abs(transform.eulerAngles.x) < 0.0001f && Math.Abs(transform.eulerAngles.z) < 0.0001f;
+            }
+
+            return;
+        }
+
+        if (!gameSystemMgr.isPause && cameraBlurSize > 0) {
+            BlurOptimized tmp = MainCamera.GetComponent<BlurOptimized>();
+            if (tmp.enabled) tmp.enabled = false;
+            cameraBlurSize = tmp.blurSize = 0;
+            accrueResultTime = 0;
+            accrueStartResultTime = -1;
+
+            quaternion.eulerAngles = new Vector3(0, FinalRotationY, 0);
+            transform.rotation = Quaternion.Lerp(transform.rotation, quaternion, Time.deltaTime * 15);
+
+            if (!isRelax) {
+                isRelax = Math.Abs(transform.eulerAngles.x) < 0.0001f && Math.Abs(transform.eulerAngles.z) < 0.0001f;
+            }
+
+            return;
+        }
 
         if (gameSystemMgr.isPlayerMoving) {
             return;

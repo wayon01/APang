@@ -11,6 +11,7 @@ public class GameSystemMgr : MonoBehaviour {
 
     public bool isCleared;
     public bool isFailed;
+    public bool isPause;
 
     private TileMgr tileMgr;
     private CameraMgr cameraMgr;
@@ -41,16 +42,25 @@ public class GameSystemMgr : MonoBehaviour {
         mapLength = Vector3.zero;
 
 
-	    isCleared = false;
-	    isFailed = false;
-	    m_playerMovingCount = 0;
-
-	    MovingTime = 1;
+	    Init();
 	}
+
+    public void Init() {
+        isCleared = false;
+        isFailed = false;
+        isPause = false;
+        m_playerMovingCount = 0;
+
+        MovingTime = 1;
+
+        UILabel textObj = GameObject.Find("ingame_accrue_move_count").GetComponent<UILabel>();
+        textObj.text = "0";
+    }
 	
 	// Update is called once per frame
 	void Update () {
 	    if (!tileMgr.isLoad) return;
+
 
 	    if (isPlayerMoving) {
 	        OnPlayerMove();
@@ -148,8 +158,8 @@ public class GameSystemMgr : MonoBehaviour {
             
         }
 
-        Text textObj = GameObject.Find("PlayerMovngCountText").GetComponent<Text>();
-        textObj.text = "이동횟수 : " + m_playerMovingCount;
+        UILabel textObj = GameObject.Find("ingame_accrue_move_count").GetComponent<UILabel>();
+        textObj.text = m_playerMovingCount.ToString();
 
     }
 

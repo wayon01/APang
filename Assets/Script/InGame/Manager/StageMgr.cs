@@ -21,10 +21,15 @@ public class StageMgr : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-	    m_currentStage = 0;
         //m_stageString = new Dictionary<int, StringReader>();
         tileMgr = TileManager.GetComponent<TileMgr>();
-	    isStageMoved = false;
+
+        Init();
+    }
+
+    public void Init() {
+        m_currentStage = 0;
+        isStageMoved = false;
         isStageMoving = false;
         cameraPos = Vector3.zero;
         playerPos = -Vector3.one;
