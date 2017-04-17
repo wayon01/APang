@@ -155,4 +155,11 @@ public class CameraMgr : MonoBehaviour {
         }
     }
 
+    public void ResetRotation() {
+        FinalRotationY = 0;
+        transform.rotation = Quaternion.identity;
+        quaternion = Quaternion.identity;
+
+    }
+
 }

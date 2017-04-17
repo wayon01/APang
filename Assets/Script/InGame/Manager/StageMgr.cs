@@ -47,6 +47,7 @@ public class StageMgr : MonoBehaviour {
                 isStageMoved = false;
 	            if (playerPos != -Vector3.one) {
 	                SetPlayerPosition();
+                    tileMgr.CameraManager.GetComponent<CameraMgr>().ResetRotation();
 	                playerPos = -Vector3.one;
 	            }
 	        }else
