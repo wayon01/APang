@@ -23,6 +23,8 @@ public class GameSystemMgr : MonoBehaviour {
     public int m_playerMovingCount;
     public int m_nextStageId;
 
+    public int[] m_playerMovementMaximum;
+
     private Vector3 selectedTilePosition;
     private Vector3 prevPlayerPosition;
     private Vector3 lerpedPosition;
@@ -40,6 +42,8 @@ public class GameSystemMgr : MonoBehaviour {
 	    PlayerLocalRotation = Player.transform.rotation;
 	    cameraMgr = tileMgr.CameraManager.GetComponent<CameraMgr>();
         mapLength = Vector3.zero;
+
+        m_playerMovementMaximum = new int[2];
 
 
 	    Init();

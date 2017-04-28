@@ -86,6 +86,11 @@ public class StageMgr : MonoBehaviour {
 
     public void SetStageChanged(int stageId) {
         if (stageId == -1) return;
+        if (stageId == -2) {
+            tileMgr.GameSystemManager.GetComponent<GameSystemMgr>().isCleared = false;
+            tileMgr.GameSystemManager.GetComponent<GameSystemMgr>().isFailed = false;
+            return;
+        }
         m_currentStage = stageId;
         isStageMoved = true;
         isStageMoving = true;

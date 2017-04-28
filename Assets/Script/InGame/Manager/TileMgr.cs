@@ -93,8 +93,17 @@ public class TileMgr : MonoBehaviour {
         isLoad = false;
         rand = new Random();
 
+        string path;
+
         //TemporaryInit();
-        string path = "file://" + Application.streamingAssetsPath + "/test.map";
+
+        if (Application.platform == RuntimePlatform.Android) {
+            path = "jar:file://" + Application.dataPath + "!/assets/test.map";
+        }
+        else {
+            path = "file://" + Application.streamingAssetsPath + "/test.map";
+        }
+
         //string path = "jar:file://" + Application.streamingAssetsPath + "!/assets/test.map";
         //ParseAndroid(path);
 
@@ -463,6 +472,14 @@ public class TileMgr : MonoBehaviour {
                 break;
             }
 
+            //player count
+            if (values[0] == "#MOVEMENT") {
+                gameSystemMgr.m_playerMovementMaximum[0] = int.Parse(values[1]);
+                gameSystemMgr.m_playerMovementMaximum[1] = int.Parse(values[2]);
+                index++;
+                continue;
+            }
+
             //map size
             if (values.Length == 3) {
                 if (stringBuilder == null) {
@@ -560,6 +577,7 @@ public class TileMgr : MonoBehaviour {
         while (source != null) {
             source = source.Replace(" ", "");
             values = source.Split(',');
+
             //map size
             if (values.Length == 3) {
                 SetMapSize(int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
@@ -666,7 +684,7 @@ public class TileMgr : MonoBehaviour {
                 return tmp;
             }
         }
-        return new TileShortcut(-Vector3.one, -1, null, null, Color.black);
+        return new TileShortcut(-Vector3.one, -2, null, null, Color.black);
     }
 
     private TileShortcut FindTargetTileShortcut(string name) {
@@ -679,7 +697,7 @@ public class TileMgr : MonoBehaviour {
                 return tmp;
             }
         }
-        return new TileShortcut(-Vector3.one, -1, null, null, Color.black);
+        return new TileShortcut(-Vector3.one, -2, null, null, Color.black);
     }
 
 

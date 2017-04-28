@@ -9,6 +9,7 @@ public class NpcPoliceTile : AttackTile {
     private APlayer player;
     private GameSystemMgr gameSystemMgr;
     private CameraMgr cameraMgr;
+    private Collider collider;
 
     private bool isMove;
 
@@ -17,7 +18,9 @@ public class NpcPoliceTile : AttackTile {
         player = GameObject.Find("player").GetComponent<APlayer>();
         gameSystemMgr = GameObject.Find("GameSystemManager").GetComponent<GameSystemMgr>();
         cameraMgr = GameObject.Find("CameraManager").GetComponent<CameraMgr>();
+        collider = GetComponent<SphereCollider>();
         _bIsCanIgnoreBlock = true;
+        collider.enabled = false;
         isMove = false;
     }
 	
@@ -33,6 +36,7 @@ public class NpcPoliceTile : AttackTile {
 	    }
 
 	    if (gameSystemMgr.isFailed && !animator.GetBool("isArrest")) {
+	        collider.enabled = true;
             animator.SetBool("isArrest", true);
         }
 

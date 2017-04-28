@@ -18,7 +18,7 @@ public class PortalTile : TileObject {
 
     void Awake() {
         targetTileId = -Vector3.one;
-        targetStage = -1;
+        targetStage = -2;
         isPortalActived = false;
     }
 
@@ -52,6 +52,7 @@ public class PortalTile : TileObject {
         if (!isPortalActived) return;
         //transform.position = new Vector3(x, transform.position.y, transform.position.z);
         if (player.positionId.y == id.y && player.positionId.z == id.z) {
+            if (targetStage == -2) return;
             gameSystemMgr.isCleared = true;
             gameSystemMgr.m_nextStageId = targetStage;
             stageMgr.SetPlayerId(targetTileId);
@@ -66,6 +67,7 @@ public class PortalTile : TileObject {
         if (!isPortalActived) return;
         //transform.position = new Vector3(transform.position.x, transform.position.y, z);
         if (player.positionId.y == id.y && player.positionId.x == id.x) {
+            if (targetStage == -2) return;
             gameSystemMgr.isCleared = true;
             gameSystemMgr.m_nextStageId = targetStage;
             stageMgr.SetPlayerId(targetTileId);

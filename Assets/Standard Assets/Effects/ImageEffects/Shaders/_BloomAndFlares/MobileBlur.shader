@@ -206,30 +206,30 @@ Shader "Hidden/FastBlur" {
 
 	// alternate blur
 	// 3
-	Pass {
-		ZTest Always
-		Cull Off
-		
-		CGPROGRAM 
-		
-		#pragma vertex vertBlurVerticalSGX
-		#pragma fragment fragBlurSGX
-		
-		ENDCG
-		}	
-		
-	// 4
-	Pass {		
-		ZTest Always
-		Cull Off
-				
-		CGPROGRAM
-		
-		#pragma vertex vertBlurHorizontalSGX
-		#pragma fragment fragBlurSGX
-		
-		ENDCG
-		}	
+//	Pass {
+//		ZTest Always
+//		Cull Off
+//		
+//		CGPROGRAM 
+//		
+//		#pragma vertex vertBlurVerticalSGX
+//		#pragma fragment fragBlurSGX
+//		
+//		ENDCG
+//		}	
+//		
+//	// 4
+//	Pass {		
+//		ZTest Always
+//		Cull Off
+//				
+//		CGPROGRAM
+//		
+//		#pragma vertex vertBlurHorizontalSGX
+//		#pragma fragment fragBlurSGX
+//		
+//		ENDCG
+//		}	
 	}	
 
 	FallBack Off
