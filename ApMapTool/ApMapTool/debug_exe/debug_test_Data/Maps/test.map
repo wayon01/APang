@@ -1,0 +1,49 @@
+#MOVEMENT, 0, 0
+
+#STAGE, 0
+7, 6, 7
+
+SpawnTile, 0, 0, 0
+GrassTile, 1, 0, 1
+GrassTile, 2, 0, 0
+NomalTile, 3, 1, 4
+NomalTile, 0, 0, 2
+GrassTile, 1, 4, 1
+NomalTile, 1, 4, 2
+GrassTile, 2, 5, 4
+NomalTile, 4, 2, 3
+NomalTile, 4, 2, 0
+FireTile, 5, 2, 1
+NomalTile, 3, 3, 0
+FireTile, 6, 0, 0
+NomalTile, 6, 0, 1
+NpcPoliceTile, 5, 3, 1
+PortalTile, 3, 5, 4, 1, area0_1, area1_1
+
+#STAGE, 1
+5, 6, 6
+
+SpawnTile, 0, 0, 0
+NomalTile, 3, 1, 4
+GrassTile, 2, 5, 4
+GrassTile, 0, 2, 1
+GrassTile, 1, 0, 5
+GrassTile, 4, 2, 5
+NomalTile, 2, 0, 0
+NomalTile, 2, 4, 1
+FireTile, 1, 3, 2
+FireTile, 3, 3, 2
+PortalTile, 0, 2, 0, 2, area1_2, area2_1
+PortalTile, 0, 0, 1, 0, area1_1, area0_1
+
+#STAGE, 2
+6, 5, 6
+
+GrassTile, 2, 3, 0
+GrassTile, 4, 3, 0
+GrassTile, 1, 3, 0
+SpawnTile, 0, 3, 0
+GoalTile, 5, 3, 4, -1
+FireTile, 3, 3, 3
+PortalTile, 1, 3, 1, 1, area2_1, area1_2
+#end

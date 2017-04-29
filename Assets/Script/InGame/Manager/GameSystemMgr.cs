@@ -162,8 +162,7 @@ public class GameSystemMgr : MonoBehaviour {
             
         }
 
-        UILabel textObj = GameObject.Find("ingame_accrue_move_count").GetComponent<UILabel>();
-        textObj.text = m_playerMovingCount.ToString();
+        GameObject.Find("ingame_accrue_move_count").GetComponent<GaugeMoveCount>().SetCountValue(m_playerMovingCount);
 
     }
 

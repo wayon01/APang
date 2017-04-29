@@ -1,0 +1,198 @@
+Mono path[0] = 'D:/Programming/Unity/앙팡/ApMapTool/ApMapTool/debug_exe/debug_test_Data/Managed'
+Mono path[1] = 'D:/Programming/Unity/앙팡/ApMapTool/ApMapTool/debug_exe/debug_test_Data/Mono'
+Mono config path = 'D:/Programming/Unity/앙팡/ApMapTool/ApMapTool/debug_exe/debug_test_Data/Mono/etc'
+PlayerConnection initialized from D:/Programming/Unity/앙팡/ApMapTool/ApMapTool/debug_exe/debug_test_Data (debug = 0)
+PlayerConnection initialized network socket : 0.0.0.0 55256
+Multi-casting "[IP] 192.168.0.13 [Port] 55256 [Flags] 3 [Guid] 2880607011 [EditorId] 1381919079 [Version] 1048832 [Id] WindowsPlayer(Snack) [Debug] 1" to [225.0.0.222:54997]...
+Waiting for connection from host on [0.0.0.0:55256]...
+PlayerConnection accepted from [192.168.0.13] handle:0x3c
+Started listening to [0.0.0.0:55256]
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,defer=y,address=0.0.0.0:56011
+PlayerConnection already initialized - listening to [0.0.0.0:55256]
+Player data archive not found at `D:/Programming/Unity/앙팡/ApMapTool/ApMapTool/debug_exe/debug_test_Data/data.unity3d`, using local filesystemInitialize engine version: 5.6.0f3 (497a0f351392)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GTX 850M (ID=0x1391)
+    Vendor:   NVIDIA
+    VRAM:     2018 MB
+    Driver:   21.21.13.7633
+Begin MonoManager ReloadAssembly
+Platform assembly: D:\Programming\Unity\앙팡\ApMapTool\ApMapTool\debug_exe\debug_test_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading D:\Programming\Unity\앙팡\ApMapTool\ApMapTool\debug_exe\debug_test_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: D:\Programming\Unity\앙팡\ApMapTool\ApMapTool\debug_exe\debug_test_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading D:\Programming\Unity\앙팡\ApMapTool\ApMapTool\debug_exe\debug_test_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: D:\Programming\Unity\앙팡\ApMapTool\ApMapTool\debug_exe\debug_test_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading D:\Programming\Unity\앙팡\ApMapTool\ApMapTool\debug_exe\debug_test_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: D:\Programming\Unity\앙팡\ApMapTool\ApMapTool\debug_exe\debug_test_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading D:\Programming\Unity\앙팡\ApMapTool\ApMapTool\debug_exe\debug_test_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: D:\Programming\Unity\앙팡\ApMapTool\ApMapTool\debug_exe\debug_test_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading D:\Programming\Unity\앙팡\ApMapTool\ApMapTool\debug_exe\debug_test_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+- Completed reload, in  0.104 seconds
+Platform assembly: D:\Programming\Unity\앙팡\ApMapTool\ApMapTool\debug_exe\debug_test_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: D:\Programming\Unity\앙팡\ApMapTool\ApMapTool\debug_exe\debug_test_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1080 59Hz; virtual: 2944x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+The referenced script on this Behaviour (Game Object 'player') is missing!
+ 
+(Filename: C:/buildslave/unity/build/Runtime/Mono/MonoBehaviour.cpp Line: 1743)
+
+UnloadTime: 2.072441 ms
+path : file://D:/Programming/Unity/앙팡/ApMapTool/ApMapTool/debug_exe/debug_test_Data/Maps/test.map
+0x01A038FB (debug_test) 
+0x01A05060 (debug_test) 
+0x018D18CA (debug_test) 
+0x014A27CB (debug_test) 
+0x014A2BBA (debug_test) 
+0x0185FC2C (debug_test) 
+0x074803C0 (Mono JIT Code) (wrapper managed-to-native) UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,string,UnityEngine.Object)
+0x07480310 (Mono JIT Code) [DebugLogHandler.cs:9] UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[]) 
+0x0747FFA9 (Mono JIT Code) [Logger.cs:41] UnityEngine.Logger:Log (UnityEngine.LogType,object) 
+0x0747FBA8 (Mono JIT Code) [DebugBindings.gen.cs:103] UnityEngine.Debug:Log (object) 
+0x0747EFAC (Mono JIT Code) [TileMgr.cs:106] TileMgr:Start () 
+0x0745195F (Mono JIT Code) (wrapper runtime-invoke) object:runtime_invoke_void__this__ (object,intptr,intptr,intptr)
+0x069A17E6 (mono) mono_set_defaults
+0x0690D865 (mono) mono_runtime_invoke
+0x01665370 (debug_test) 
+0x01661AC8 (debug_test) 
+0x018C876C (debug_test) 
+0x018C8B67 (debug_test) 
+0x018C9235 (debug_test) 
+0x012989F7 (debug_test) 
+0x018AF320 (debug_test) 
+0x00FF82C7 (debug_test) 
+0x01A40968 (debug_test) 
+0x01A81CE3 (debug_test) 
+0x774B62C4 (KERNEL32) BaseThreadInitThunk
+0x77690FD9 (ntdll) RtlSubscribeWnfStateChangeNotification
+0x77690FA4 (ntdll) RtlSubscribeWnfStateChangeNotification
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Setting up 4 worker threads for Enlighten.
+  Thread -> id: 3cb4 -> priority: 1 
+  Thread -> id: 3284 -> priority: 1 
+  Thread -> id: 3884 -> priority: 1 
+  Thread -> id: 20a4 -> priority: 1 
+map data : #MOVEMENT, 0, 0
+
+#STAGE, 0
+7, 6, 7
+
+SpawnTile, 0, 0, 0
+GrassTile, 1, 0, 1
+GrassTile, 2, 0, 0
+NomalTile, 3, 1, 4
+NomalTile, 0, 0, 2
+GrassTile, 1, 4, 1
+NomalTile, 1, 4, 2
+GrassTile, 2, 5, 4
+NomalTile, 4, 2, 3
+NomalTile, 4, 2, 0
+FireTile, 5, 2, 1
+NomalTile, 3, 3, 0
+FireTile, 6, 0, 0
+NomalTile, 6, 0, 1
+NpcPoliceTile, 5, 3, 1
+PortalTile, 3, 5, 4, 1, area0_1, area1_1
+
+#STAGE, 1
+5, 6, 6
+
+SpawnTile, 0, 0, 0
+NomalTile, 3, 1, 4
+GrassTile, 2, 5, 4
+GrassTile, 0, 2, 1
+GrassTile, 1, 0, 5
+GrassTile, 4, 2, 5
+NomalTile, 2, 0, 0
+NomalTile, 2, 4, 1
+FireTile, 1, 3, 2
+FireTile, 3, 3, 2
+PortalTile, 0, 2, 0, 2, area1_2, area2_1
+PortalTile, 0, 0, 1, 0, area1_1, area0_1
+
+#STAGE, 2
+6, 5, 6
+
+GrassTile, 2, 3, 0
+GrassTile, 4, 3, 0
+GrassTile, 1, 3, 0
+SpawnTile, 0, 3, 0
+GoalTile, 5, 3, 4, -1
+FireTile, 3, 3, 3
+PortalTile, 1, 3, 1, 1, area2_1, area1_2
+#end
+
+0x01A038FB (debug_test) 
+0x01A05060 (debug_test) 
+0x018D18CA (debug_test) 
+0x014A27CB (debug_test) 
+0x014A2BBA (debug_test) 
+0x0185FC2C (debug_test) 
+0x074803C0 (Mono JIT Code) (wrapper managed-to-native) UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,string,UnityEngine.Object)
+0x07480310 (Mono JIT Code) [DebugLogHandler.cs:9] UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[]) 
+0x0747FFA9 (Mono JIT Code) [Logger.cs:41] UnityEngine.Logger:Log (UnityEngine.LogType,object) 
+0x0747FBA8 (Mono JIT Code) [DebugBindings.gen.cs:103] UnityEngine.Debug:Log (object) 
+0x07480C2C (Mono JIT Code) [TileMgr.cs:452] TileMgr/<Parse>c__Iterator0:MoveNext () 
+0x07480743 (Mono JIT Code) [Coroutines.cs:17] UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr) 
+0x07480806 (Mono JIT Code) (wrapper runtime-invoke) <Module>:runtime_invoke_void_object_intptr (object,intptr,intptr,intptr)
+0x069A17E6 (mono) mono_set_defaults
+0x0690D865 (mono) mono_runtime_invoke
+0x01665370 (debug_test) 
+0x01661AC8 (debug_test) 
+0x015255B3 (debug_test) 
+0x015265C3 (debug_test) 
+0x01527138 (debug_test) 
+0x018C4C6A (debug_test) 
+0x01298A81 (debug_test) 
+0x018AF390 (debug_test) 
+0x00FF82C7 (debug_test) 
+0x01A40968 (debug_test) 
+0x01A81CE3 (debug_test) 
+0x774B62C4 (KERNEL32) BaseThreadInitThunk
+0x77690FD9 (ntdll) RtlSubscribeWnfStateChangeNotification
+0x77690FA4 (ntdll) RtlSubscribeWnfStateChangeNotification
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+PortalTile(Clone) Color : 0.075, 0.3308306, 0.9299082
+0x01A038FB (debug_test) 
+0x01A05060 (debug_test) 
+0x018D18CA (debug_test) 
+0x014A27CB (debug_test) 
+0x014A2BBA (debug_test) 
+0x0185FC2C (debug_test) 
+0x074803C0 (Mono JIT Code) (wrapper managed-to-native) UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,string,UnityEngine.Object)
+0x07480310 (Mono JIT Code) [DebugLogHandler.cs:9] UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[]) 
+0x0747FFA9 (Mono JIT Code) [Logger.cs:41] UnityEngine.Logger:Log (UnityEngine.LogType,object) 
+0x0747FBA8 (Mono JIT Code) [DebugBindings.gen.cs:103] UnityEngine.Debug:Log (object) 
+0x074D0C38 (Mono JIT Code) [PortalTile.cs:90] PortalTile:SetPortalColor (UnityEngine.Color) 
+0x074CEF8F (Mono JIT Code) [TileMgr.cs:390] TileMgr:SetTile (UnityEngine.GameObject,int,int,int,string[]) 
+0x074CDD09 (Mono JIT Code) [TileMgr.cs:657] TileMgr:ParseTile (string[]) 
+0x074CC9A1 (Mono JIT Code) [TileMgr.cs:592] TileMgr:SettingMap (int) 
+0x07481DDF (Mono JIT Code) [TileMgr.cs:561] TileMgr/<Parse>c__Iterator0:MoveNext () 
+0x07480743 (Mono JIT Code) [Coroutines.cs:17] UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr) 
+0x07480806 (Mono JIT Code) (wrapper runtime-invoke) <Module>:runtime_invoke_void_object_intptr (object,intptr,intptr,intptr)
+0x069A17E6 (mono) mono_set_defaults
+0x0690D865 (mono) mono_runtime_invoke
+0x01665370 (debug_test) 
+0x01661AC8 (debug_test) 
+0x015255B3 (debug_test) 
+0x015265C3 (debug_test) 
+0x01527138 (debug_test) 
+0x018C4C6A (debug_test) 
+0x01298A81 (debug_test) 
+0x018AF390 (debug_test) 
+0x00FF82C7 (debug_test) 
+0x01A40968 (debug_test) 
+0x01A81CE3 (debug_test) 
+0x774B62C4 (KERNEL32) BaseThreadInitThunk
+0x77690FD9 (ntdll) RtlSubscribeWnfStateChangeNotification
+0x77690FA4 (ntdll) RtlSubscribeWnfStateChangeNotification
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Waiting for finish
