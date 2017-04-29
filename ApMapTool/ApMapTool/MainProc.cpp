@@ -4,9 +4,16 @@
 #include "ResourceManager.h"
 #include "GoalTileNode.h"
 #include "WarpTileNode.h"
+#include <iostream>
 
 
 MainProc::MainProc() {
+
+	char Path[MAX_PATH];
+	GetCurrentDirectoryA(MAX_PATH, Path);
+
+	m_exePath = Path;
+
 	m_fileName = "untitled.map";
 	RESMGR->SetMapSize(6, 6, 6);
 }
@@ -53,6 +60,12 @@ void MainProc::ReadMapFile() {
 
 		std::vector<std::string> lit;
 		Split(lit, replace_all(buf, " ", ""), ",", true);
+
+		//플레이어 이동 제한
+		if(lit[0] == "#MOVEMENT") {
+			m_goldValue = std::atoi(lit[1].c_str());
+			m_silverValue = std::atoi(lit[2].c_str());
+		}
 
 		//스테이지
 		if(lit[0] == "#STAGE") {
@@ -119,13 +132,26 @@ void MainProc::ReadMapFile() {
 
 }
 
-
 void MainProc::SaveMapFile() const {
+	SaveMapFile(m_filePath);
+}
 
-	std::ofstream fout(m_filePath);
+
+
+void MainProc::SaveMapFile(std::string str) const {
+
+	std::ofstream fout(str);
+
+	if(fout.fail()) {
+		std::string asdf = strerror(errno);
+		asdf.append(" a");
+		return;
+	}
 
 	auto mapProc = RESMGR->GetMapProc();
 	int stageId = mapProc->GetStageId();
+
+	fout << "#MOVEMENT, " << m_goldValue << ", " << m_silverValue << std::endl;
 
 	for(int stage = 0; stage < mapProc->GetMapStage().size(); stage++) {
 
@@ -172,6 +198,7 @@ void MainProc::SaveMapFile() const {
 }
 
 
+
 void MainProc::AutoSaveFile() {
 
 	if (GetAsyncKeyState(VK_CONTROL) && GetAsyncKeyState(VkKeyScanA('s')) & 0x8001) {
@@ -205,6 +232,20 @@ void MainProc::AutoSaveFileWithPath() {
 		SaveMapFile();
 		RESMGR->SetTitleSaved();
 	}
+}
+
+
+void MainProc::DebugGame() {
+	SetCurrentDirectoryA(m_exePath.c_str());
+
+	SaveMapFile(m_exePath + "\\debug_exe\\debug_test_Data\\Maps\\test.map");
+
+	std::string strPath = m_exePath;
+
+	Sleep(1000);
+	strPath.append("\\debug_exe\\debug_test.exe");
+
+	system(strPath.c_str());
 }
 
 

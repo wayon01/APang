@@ -80,6 +80,10 @@ LRESULT DetailWindow::OnKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam) {
 		}
 	}
 
+	if (GetAsyncKeyState(VK_F5) & 0x8001) {
+		RESMGR->getMainProc()->DebugGame();
+	}
+
 	return 0;
 }
 

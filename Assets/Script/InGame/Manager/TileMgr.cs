@@ -102,6 +102,9 @@ public class TileMgr : MonoBehaviour {
         }
         else {
             path = "file://" + Application.streamingAssetsPath + "/test.map";
+            //path = "file://" + Application.dataPath + "/Maps/test.map";
+            //Debug.Log("path : " + path);
+
         }
 
         //string path = "jar:file://" + Application.streamingAssetsPath + "!/assets/test.map";
@@ -445,6 +448,8 @@ public class TileMgr : MonoBehaviour {
 
         string source;
         string[] sources = File.text.Split('\n');
+
+        //Debug.Log("map data : " + File.text);
 
         if (sources.Length == 0) {
             yield return File;

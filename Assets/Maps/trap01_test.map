@@ -1,0 +1,10 @@
+#MOVEMENT, 0, 0
+
+#STAGE, 0
+6, 6, 6
+
+SpawnTile, 3, 2, 0
+NomalTile, 2, 3, 0
+GrassTile, 3, 2, 4
+GoalTile, 2, 1, 5, -1
+#end

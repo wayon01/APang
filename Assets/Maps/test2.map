@@ -1,17 +1,15 @@
+#MOVEMENT, 0, 0
+
+#STAGE, 0
 7, 6, 5
 
 SpawnTile, 0, 0, 0
 GrassTile, 1, 0, 0
 GrassTile, 2, 0, 0
 NomalTile, 3, 1, 4
-
 GrassTile, 1, 4, 1
-GoalTile, 2, 5, 4
-
+GoalTile, 2, 5, 4, -1
 NomalTile, 4, 2, 3
-
-
 NomalTile, 3, 3, 0
-
-
 FireTile, 6, 0, 0
+#end

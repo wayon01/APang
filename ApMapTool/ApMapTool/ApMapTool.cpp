@@ -40,6 +40,7 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK MapSizeDig(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK AddAssetDig(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK PlayerMoveDig(HWND, UINT, WPARAM, LPARAM);
 void InitToolbar(HWND hWnd);
 void SaveFile(HWND hWnd);
 
@@ -162,12 +163,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		case IDM_ADDASSET:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ADDASSETDIG), hWnd, AddAssetDig);
 			break;
+		case IDM_PLAYERMOVE:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_PLAYERMOVE), hWnd, PlayerMoveDig);
+			break;
 		case IDM_ADDAREA: {
 			MapVector tmp = new MapNode();
 			tmp->id = RESMGR->GetMapProc()->GetMapStage().size();
 			RESMGR->GetMapProc()->MapStagePushBack(tmp->id, tmp);
 			stageWindow.LoadStageList();
 			RESMGR->SetTitleUnSaved();
+		}
+			break;
+		case IDM_DEBUGGAME: {
+			mainProc->DebugGame();
 		}
 			break;
 		case IDM_EXIT:
@@ -309,8 +317,18 @@ INT_PTR CALLBACK MapSizeDig(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPara
 	UNREFERENCED_PARAMETER(lParam);
 	switch (message) {
 		break;
-		case WM_INITDIALOG:
-			return (INT_PTR)TRUE;
+	case WM_INITDIALOG: {
+		auto hX = GetDlgItem(hDlg, IDC_EDITX);
+		auto hY = GetDlgItem(hDlg, IDC_EDITY);
+		auto hZ = GetDlgItem(hDlg, IDC_EDITZ);
+
+		vec3 tmp = RESMGR->GetMapProc()->getMapSize() + vec3{ 1, 1, 1 };
+
+		SetWindowTextA(hX, std::to_string((int)tmp.x).c_str());
+		SetWindowTextA(hY, std::to_string((int)tmp.y).c_str());
+		SetWindowTextA(hZ, std::to_string((int)tmp.z).c_str());
+		return (INT_PTR)TRUE;
+	}
 
 		case WM_COMMAND: {
 			if (LOWORD(wParam) == IDCANCEL) {
@@ -393,6 +411,50 @@ INT_PTR CALLBACK AddAssetDig(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 
 	}
 	 break;
+	}
+	return (INT_PTR)FALSE;
+}
+
+
+INT_PTR __stdcall PlayerMoveDig(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message) {
+	case WM_INITDIALOG: {
+		auto hGold = GetDlgItem(hDlg, IDC_MOVEGOLD);
+		auto hSilver = GetDlgItem(hDlg, IDC_MOVESILVER);
+
+
+		SetWindowTextA(hGold, std::to_string(mainProc->getGoldValue()).c_str());
+		SetWindowTextA(hSilver, std::to_string(mainProc->getSilverValue()).c_str());
+		return (INT_PTR)TRUE;
+	}
+
+
+	case WM_COMMAND: {
+		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL) {
+
+			if (LOWORD(wParam) == IDOK) {
+				auto hGold = GetDlgItem(hDlg, IDC_MOVEGOLD);
+				auto hSilver = GetDlgItem(hDlg, IDC_MOVESILVER);
+
+				char hGoldStr[256];
+				char hSilverStr[256];
+
+				GetWindowTextA(hGold, hGoldStr, 256);
+				GetWindowTextA(hSilver, hSilverStr, 256);
+
+				mainProc->SetGoldValue(std::atoi(hGoldStr));
+				mainProc->SetSilverValue(std::atoi(hSilverStr));
+
+				RESMGR->SetTitleUnSaved();
+			}
+
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)TRUE;
+		}
+
+	}
+		break;
 	}
 	return (INT_PTR)FALSE;
 }

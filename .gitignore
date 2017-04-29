@@ -64,6 +64,8 @@ sysinfo.txt
 *.lib
 
 # Executables
-*.exe
 *.out
 *.app
+
+# ETC
+*.opendb
