@@ -6,11 +6,11 @@ public class StagePauseBt : MonoBehaviour {
 
     public GameObject pauseUI;
 
-    private StagePouseUI stagePouseUi;
+    private StagePauseUI _stagePauseUi;
 
 	// Use this for initialization
 	void Start () {
-	    stagePouseUi = pauseUI.GetComponent<StagePouseUI>();
+	    _stagePauseUi = pauseUI.GetComponent<StagePauseUI>();
 	}
 	
 	// Update is called once per frame
@@ -19,7 +19,7 @@ public class StagePauseBt : MonoBehaviour {
 	}
 
     void OnClick() {
-        stagePouseUi.isPause = !stagePouseUi.isPause;
-        stagePouseUi.OnClickedEvent();;
+        _stagePauseUi.isPause = !_stagePauseUi.isPause;
+        _stagePauseUi.OnClickedEvent();
     }
 }

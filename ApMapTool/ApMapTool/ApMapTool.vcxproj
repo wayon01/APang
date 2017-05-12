@@ -153,6 +153,7 @@
     <ClInclude Include="AssetProc.h" />
     <ClInclude Include="AssetWindow.h" />
     <ClInclude Include="ChildWindow.h" />
+    <ClInclude Include="DecoTile.h" />
     <ClInclude Include="DetailWindow.h" />
     <ClInclude Include="GoalTileNode.h" />
     <ClInclude Include="MacroDef.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="AssetProc.cpp" />
     <ClCompile Include="AssetWindow.cpp" />
     <ClCompile Include="ChildWindow.cpp" />
+    <ClCompile Include="DecoTile.cpp" />
     <ClCompile Include="DetailWindow.cpp" />
     <ClCompile Include="GoalTileNode.cpp" />
     <ClCompile Include="MainProc.cpp" />

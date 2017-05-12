@@ -71,6 +71,13 @@ void AssetWindow::SaveAssetList() const {
 }
 
 
+void AssetWindow::SetAssetInfo(std::string name, std::string strId, std::string filePath, std::string tileName) {
+	RESMGR->GetAssetProc()->SetAssetInfo(name, strId, filePath, tileName);
+	SaveAssetList();
+	LoadAssetList();
+}
+
+
 void AssetWindow::SetAssetInfo(std::string name, std::string strId, std::string filePath) {
 
 	RESMGR->GetAssetProc()->SetAssetInfo(name, strId, filePath);

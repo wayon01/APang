@@ -4,6 +4,7 @@
 #include "ResourceManager.h"
 #include "GoalTileNode.h"
 #include "WarpTileNode.h"
+#include "DecoTile.h"
 
 
 MapProc::MapProc(): /*size_x(0), size_y(0), size_z(0),*/ m_curTile(new TileNode(0, 0, 0, 0)) {
@@ -53,6 +54,27 @@ void MapProc::SetTile(int id, int x, int y, int z, int nextStageId) {
 
 
 	GoalTileNode* tmp = new GoalTileNode(id, x, y, z, nextStageId);
+
+	SetTilePositionByIdPos(tmp, x, y, z);
+
+	m_map_stage[m_stageId]->m_map.push_back(tmp);
+
+	if (id == RESMGR->GetAssetProc()->getSpawnId()) {
+		m_curTile->x = x;
+		m_curTile->y = y;
+		m_curTile->z = z;
+		SetTilePositionByIdPos(m_curTile, x, y, z);
+	}
+}
+
+
+void MapProc::SetDecoTile(int id, int x, int y, int z, bool isEnable) {
+	if ((x < 0) || (y < 0) || (z < 0)) return;
+	if (x > m_map_stage[m_stageId]->size_x || y > m_map_stage[m_stageId]->size_y || z > m_map_stage[m_stageId]->size_z) return;
+	if (!isNullptr(x, y, z)) return;
+
+
+	DecoTile* tmp = new DecoTile(id, x, y, z, isEnable);
 
 	SetTilePositionByIdPos(tmp, x, y, z);
 

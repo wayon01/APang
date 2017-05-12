@@ -38,9 +38,15 @@ void AssetProc::LoadAssetList() {
 		std::vector<std::string> lit;
 		MainProc::Split(lit, MainProc::replace_all(buf, " ", ""), ",", true);
 
-		if (lit.size() != 3) continue;
+		if (lit.size() == 3) {
+			SetTileId(lit[0], lit[1], lit[2]);
+		}else if(lit.size() == 4) {
+			SetTileId(lit[0], lit[1], lit[2], lit[3]);
+		}else {
+			continue;
+		}
 
-		SetTileId(lit[0], lit[1], lit[2]);
+		
 		//m_assetList.push_back(ASSETINFO{ std::atoi(lit[1].c_str()), lit[0], lit[2] });
 
 		buf.clear();
@@ -57,7 +63,12 @@ void AssetProc::SaveAssetList() {
 	for (int i = 0; i < m_assetList.size(); i++) {
 		auto asset = m_assetList[i];
 
-		fout << asset.m_name << ", " << asset.m_strId << ", " << asset.m_filePath << std::endl;
+		if(asset.m_tileName == "null") {
+			fout << asset.m_name << ", " << asset.m_strId << ", " << asset.m_filePath << std::endl;
+		}else {
+			fout << asset.m_name << ", " << asset.m_strId << ", " << asset.m_filePath << ", " << asset.m_tileName << std::endl;
+		}
+		
 	}
 
 	fout << "##end" << std::endl;
@@ -72,6 +83,10 @@ int AssetProc::FindTileId(std::string idStr) const {
 		if(assetTmp.m_strId == idStr) {
 			return assetTmp.id;
 		}
+
+		if(assetTmp.m_tileName == idStr) {
+			return assetTmp.id;
+		}
 	}
 
 	return TILE_NONE;
@@ -83,6 +98,17 @@ std::string AssetProc::FindTileIdStr(int id) const {
 	for (auto& assetTmp : m_assetList) {
 		if (assetTmp.id == id) {
 			return assetTmp.m_strId;
+		}
+	}
+
+	return "NULL";
+}
+
+
+std::string AssetProc::FindDecoTileIdStr(int id) const {
+	for (auto& assetTmp : m_assetList) {
+		if (assetTmp.id == id) {
+			return assetTmp.m_tileName;
 		}
 	}
 
@@ -104,41 +130,58 @@ int AssetProc::FindTextureIdtoId(int id) {
 }
 
 
+
+
 void AssetProc::SetTileId(std::string name, std::string strId, std::string filePath) {
 
 	m_curId++;
 
 	if(strId == "SpawnTile" || strId == "spawnTile" || strId == "spawn tile") {
-		m_assetList.push_back(ASSETINFO{ m_curId, name, "SpawnTile", filePath });
+		m_assetList.push_back(ASSETINFO{ m_curId, name, "SpawnTile", filePath, "null" });
 		m_spawnId = m_curId;
 		return;
 	}
 
 	if(strId == "GoalTile" || strId == "goalTile" || strId == "goal tile") {
-		m_assetList.push_back(ASSETINFO{ m_curId, name, "GoalTile", filePath });
+		m_assetList.push_back(ASSETINFO{ m_curId, name, "GoalTile", filePath, "null" });
 		m_goalId = m_curId;
 		return;
 	}
 
 	if (strId == "PortalTile" || strId == "portalTile" || strId == "portal tile") {
-		m_assetList.push_back(ASSETINFO{ m_curId, name, "PortalTile", filePath });
+		m_assetList.push_back(ASSETINFO{ m_curId, name, "PortalTile", filePath, "null" });
 		m_portalId = m_curId;
 		return;
 	}
 
 	if (strId == "DecoTile" || strId == "decoTile" || strId == "deco tile") {
-		m_assetList.push_back(ASSETINFO{ m_curId, name, "DecoTile", filePath });
+		m_assetList.push_back(ASSETINFO{ m_curId, name, "DecoTile", filePath, "null" });
 		m_decorationId.push_back(m_curId);
 		return;
 	}
 
 	if (strId == "AttackTile" || strId == "attackTile" || strId == "attack tile") {
-		m_assetList.push_back(ASSETINFO{ m_curId, name, "AttackTile", filePath });
+		m_assetList.push_back(ASSETINFO{ m_curId, name, "AttackTile", filePath, "null" });
 		m_attackerId.push_back(m_curId);
 		return;
 	}
 
-	m_assetList.push_back(ASSETINFO{ m_curId, name, strId, filePath });
+	m_assetList.push_back(ASSETINFO{ m_curId, name, strId, filePath, "null" });
 	bIsAddedTile = true;
+
+}
+
+
+void AssetProc::SetTileId(std::string name, std::string strId, std::string filePath, std::string tileName) {
+
+	m_curId++;
+
+	if (strId == "DecoTile" || strId == "decoTile" || strId == "deco tile") {
+		m_assetList.push_back(ASSETINFO{ m_curId, name, "DecoTile", filePath, tileName });
+		m_decorationId.push_back(m_curId);
+		return;
+	}
+
+
 
 }

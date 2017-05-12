@@ -39,12 +39,14 @@ public class StageGaugeBar : MonoBehaviour {
 	        b_topGauge = false;
 	        GameObject.Find("grade_top").GetComponent<GaugeStar>().SetClosed();
             SetTweenScale(new Vector3(174, 18, 1), new Vector3(87, 18, 1));
-	    }
+            gameSystemMgr.m_playerScore = 2;
+        }
 
         if (b_midGauge && gameSystemMgr.m_playerMovingCount > gameSystemMgr.m_playerMovementMaximum[1]) {
             b_midGauge = false;
             GameObject.Find("grade_mid").GetComponent<GaugeStar>().SetClosed();
             SetTweenScale(transform.localScale, new Vector3(0, 18, 1));
+            gameSystemMgr.m_playerScore = 1;
         }
 
 

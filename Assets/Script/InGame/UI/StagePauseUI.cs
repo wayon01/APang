@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StagePouseUI : MonoBehaviour {
+public class StagePauseUI : MonoBehaviour {
 
     public bool isPause = false;
 

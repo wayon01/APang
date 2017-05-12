@@ -1,0 +1,8 @@
+#MOVEMENT, 0, 0
+
+#STAGE, 0
+6, 6, 6
+
+DecoTile # DecoTestTile, 2, 0, 0, false
+DecoTile # DecoTest2, 0, 0, 0, true
+#end

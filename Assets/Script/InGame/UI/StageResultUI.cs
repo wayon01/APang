@@ -7,12 +7,21 @@ public class StageResultUI : MonoBehaviour {
     private GameSystemMgr gameSystemMgr;
     private float accrueTime = 0;
     private GameObject stage_result;
-    
+
+    private GameObject clear_background;
+    private GameObject layer2;
+    private GameObject particle;
+
+
 
     // Use this for initialization
     void Start () {
+        transform.localPosition= new Vector3(0, 200, 0);
 	    gameSystemMgr = GameObject.Find("GameSystemManager").GetComponent<GameSystemMgr>();
-        stage_result = GameObject.Find("stage_result");
+        clear_background = GameObject.Find("clear_background");
+        particle = GameObject.Find("clear_background_particle");
+        particle.SetActive(false);
+        //stage_result = GameObject.Find("stage_result");
         accrueTime = 0;
     }
 	
@@ -21,19 +30,23 @@ public class StageResultUI : MonoBehaviour {
 	    if (gameSystemMgr.isCleared || gameSystemMgr.isFailed) {
 
 	        if (accrueTime == 0 && gameSystemMgr.isFailed) {
-	            stage_result.GetComponent<UISprite>().spriteName = "result_txt_over";
+	            //stage_result.GetComponent<UISprite>().spriteName = "result_txt_over";
+            }
+            else if (accrueTime == 0 && gameSystemMgr.isCleared) {
+                transform.localPosition = Vector3.zero;
+	            clear_background.GetComponent<TweenScale>().enabled = true;
 	        }
-	        accrueTime += Time.deltaTime;
 
-	        if (gameSystemMgr.isFailed && accrueTime > 1.5f ||
-                gameSystemMgr.isCleared && accrueTime > 1f) {
-	            Vector3 position = transform.localPosition;
-	            transform.localPosition = new Vector3(
-                    0,
-                    Mathf.Lerp(position.y, 0, 0.1f),
-                    0
-                    );
+	        if (gameSystemMgr.isCleared) {
+	            if (layer2 == null && accrueTime >= 0.5f) {
+                    layer2 = GameObject.Find("clear_panel_layer_2");
+	                layer2.GetComponent<TweenScale>().enabled = true;
+                    layer2.GetComponent<ClearStarsUI>().enabled = true;
+                    particle.SetActive(true);
+                }
 	        }
-	    }
+
+            accrueTime += Time.deltaTime;
+        }
 	}
 }

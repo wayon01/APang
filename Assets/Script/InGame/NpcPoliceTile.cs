@@ -38,7 +38,7 @@ public class NpcPoliceTile : AttackTile {
 	    if (gameSystemMgr.isFailed && !animator.GetBool("isArrest")) {
 	        collider.enabled = true;
             animator.SetBool("isArrest", true);
-        }
+	    }
 
         if (!Input.GetMouseButtonDown(0) && !Input.GetMouseButton(0))
             transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.1f);

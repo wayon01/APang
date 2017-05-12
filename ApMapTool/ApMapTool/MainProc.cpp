@@ -5,6 +5,7 @@
 #include "GoalTileNode.h"
 #include "WarpTileNode.h"
 #include <iostream>
+#include "DecoTile.h"
 
 
 MainProc::MainProc() {
@@ -118,7 +119,26 @@ void MainProc::ReadMapFile() {
 		} else if (lit[0] == "PortalTile") {
 			id = asset_proc->getPortalId();
 		} else {
-			id = asset_proc->FindTileId(lit[0]);
+
+			std::vector<std::string> IdLit;
+			Split(IdLit, lit[0], "#", true);
+
+			if(IdLit[0] == "DecoTile") {
+				id = asset_proc->FindTileId(IdLit[1]);
+
+				if (map_proc->GetMapStage().size() == 0) {
+					map_proc->MapStagePushBack(0, new MapNode());
+				}
+
+				lit[0] = "DecoTile";
+				RESMGR->SetTile(stageCount, id, lit);
+				buf.clear();
+
+				continue;
+
+			} else {
+				id = asset_proc->FindTileId(lit[0]);
+			}
 		}
 
 		if(map_proc->GetMapStage().size() == 0) {
@@ -187,6 +207,13 @@ void MainProc::SaveMapFile(std::string str) const {
 				fout << id << ", " << tile->x << ", " << tile->y << ", " << tile->z << ", " << tmp_warp->m_additionalIntegerType["Area ID"] << ", " << tmp_warp->m_additionalStringType["타일 이름"] << ", " << tmp_warp->m_additionalStringType["이동할 타일 이름"] << std::endl;
 				continue;
 			}
+
+			if(id == "DecoTile") {
+				DecoTile* tmp_deco = static_cast<DecoTile*>(tile);
+				std::string tmp_deco_enable = tmp_deco->m_additionalBooleanType["타일인식"] ? "true" : "false";
+				fout << "DecoTile" << " # " << asset_proc->FindDecoTileIdStr(tile->id) << ", " << tile->x << ", " << tile->y << ", " << tile->z << ", " << tmp_deco_enable << std::endl;
+				continue;
+			}
 			fout << id << ", " << tile->x << ", " << tile->y << ", " << tile->z << std::endl;
 		}
 	}
@@ -238,11 +265,10 @@ void MainProc::AutoSaveFileWithPath() {
 void MainProc::DebugGame() {
 	SetCurrentDirectoryA(m_exePath.c_str());
 
-	SaveMapFile(m_exePath + "\\debug_exe\\debug_test_Data\\Maps\\test.map");
+	SaveMapFile(m_exePath + "\\debug_exe\\debug_test_Data\\StreamingAssets\\test.map");
 
 	std::string strPath = m_exePath;
 
-	Sleep(1000);
 	strPath.append("\\debug_exe\\debug_test.exe");
 
 	system(strPath.c_str());

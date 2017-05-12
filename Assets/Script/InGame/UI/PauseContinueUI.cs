@@ -5,11 +5,11 @@ using UnityEngine;
 public class PauseContinueUI : MonoBehaviour {
 
     public GameObject pouse_panel;
-    private StagePouseUI _stagePouseUi;
+    private StagePauseUI _stagePauseUi;
 
 	// Use this for initialization
 	void Start () {
-	    _stagePouseUi = pouse_panel.GetComponent<StagePouseUI>();
+	    _stagePauseUi = pouse_panel.GetComponent<StagePauseUI>();
 	}
 	
 	// Update is called once per frame
@@ -18,7 +18,7 @@ public class PauseContinueUI : MonoBehaviour {
 	}
 
     void OnClick() {
-        _stagePouseUi.SetPause(false);
-        _stagePouseUi.OnClickedEvent();
+        _stagePauseUi.SetPause(false);
+        _stagePauseUi.OnClickedEvent();
     }
 }
