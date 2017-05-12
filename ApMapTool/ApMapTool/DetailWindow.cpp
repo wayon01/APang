@@ -61,6 +61,16 @@ LRESULT DetailWindow::OnDefault(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPara
 					}
 					}
 
+				}else if(tmp.id == ID_BOOL) {
+					if (SendMessage(tmp.value, BM_GETCHECK, 0, 0) == BST_UNCHECKED) {
+						SendMessage(tmp.value, BM_SETCHECK, BST_CHECKED, 0);
+						m_currentTile->m_additionalBooleanType[tmp.strName] = true;
+						RESMGR->SetTitleUnSaved();
+					} else {
+						SendMessage(tmp.value, BM_SETCHECK, BST_UNCHECKED, 0);
+						m_currentTile->m_additionalBooleanType[tmp.strName] = false;
+						RESMGR->SetTitleUnSaved();
+					}
 				}
 			}
 		}
@@ -101,6 +111,26 @@ void DetailWindow::LoadCurrentTileInfo() {
 
 	int x = 0;
 	int y = 30;
+
+	for (const auto& pair : m_currentTile->m_additionalBooleanType) {
+		TileDetail tmp;
+
+		tmp.name = CreateWindowA("static", pair.first.c_str(), WS_CHILD | WS_VISIBLE,
+			x, y, WindowRect.right, WindowRect.bottom, hWnd, (HMENU)-1, hInst, NULL);
+		tmp.strName = pair.first;
+
+		int sx = x + pair.first.size() * 10;
+		tmp.value = CreateWindowA("button", NULL, WS_CHILD | WS_VISIBLE | BS_CHECKBOX
+			, sx, y, sx + 200, 25, hWnd, (HMENU)m_detail.size(), hInst, NULL);
+		SendMessage(tmp.value, BM_SETCHECK, pair.second ? BST_CHECKED : BST_UNCHECKED, 0);
+
+		tmp.id = ID_BOOL;
+
+		m_detail.push_back(tmp);
+
+		y += 25;
+	}
+
 	for(const auto& pair : m_currentTile->m_additionalIntegerType) {
 		TileDetail tmp;
 

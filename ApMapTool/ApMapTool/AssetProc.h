@@ -33,6 +33,11 @@ public:
 		SaveAssetList();
 	}
 
+	void SetAssetInfo(std::string name, std::string strId, std::string filePath, std::string tileName) {
+		SetTileId(name, strId, filePath, tileName);
+		SaveAssetList();
+	}
+
 	int getSpawnId() const {
 		return m_spawnId;
 	}
@@ -55,6 +60,7 @@ public:
 
 	int FindTileId(std::string idStr) const;
 	std::string FindTileIdStr(int id) const;
+	std::string FindDecoTileIdStr(int id) const;
 	int FindTextureIdtoId(int id);
 
 	bool isAddedTile() const {
@@ -68,6 +74,7 @@ public:
 
 private:
 	void SetTileId(std::string name, std::string strId, std::string filePath);
+	void SetTileId(std::string name, std::string strId, std::string filePath, std::string tileName);
 
 private:
 	struct ASSETINFO {
@@ -75,6 +82,7 @@ private:
 		std::string m_name;
 		std::string m_strId;
 		std::string m_filePath;
+		std::string m_tileName;
 		int m_textureId[1];
 	};
 	std::vector<ASSETINFO> m_assetList;

@@ -73,6 +73,8 @@ public class TileMgr : MonoBehaviour {
     public GameObject FountainTile = null;
     public GameObject PortalTile = null;
 
+    public GameObject DecoTile = null;
+
     public bool isClicked;
     public bool isLoad;
     private bool isResetTilePosition;
@@ -167,36 +169,10 @@ public class TileMgr : MonoBehaviour {
     }
 
     private void AllResetTilePosition(int rotationY) {
-        //bool positionIsX = Math.Abs(rotationY) != 90;
 
         Player.GetComponent<AActor>().resetPosition();
         Player.GetComponent<APlayer>().isBlocked = false;
 
-        //for (int j = 0; j < _lengthY; j++) {
-
-        //    TileAreaValue[] tileVal_X = m_tileArea[j].x;
-        //    TileAreaValue[] tileVal_Z = m_tileArea[j].z;
-
-        //    for (int i = 0; i < _lengthX; i++) {
-
-        //        if (tileVal_X[i].id_front != -1)
-        //            tileVal_X[i].front.GetComponent<TileObject>().resetPosition();
-
-        //        if (tileVal_X[i].id_back != -1)
-        //            tileVal_X[i].back.GetComponent<TileObject>().resetPosition();
-
-        //    }
-
-        //    for (int i = 0; i < _lengthZ; i++) {
-
-        //        if (tileVal_Z[i].id_front != -1)
-        //            tileVal_Z[i].front.GetComponent<TileObject>().resetPosition();
-
-        //        if (tileVal_Z[i].id_back != -1)
-        //            tileVal_Z[i].back.GetComponent<TileObject>().resetPosition();
-
-        //    }
-        //}
     }
 
     private void AllReshapeTilePosition(int rotationY) {
@@ -208,30 +184,12 @@ public class TileMgr : MonoBehaviour {
         switch (rotationY) {
             case 0:
             case 90:
-                isFront = true; {
-                    //Vector3 playerPos = Player.transform.position;
-                    //if (!positionIsX) {
-                    //    Player.transform.position = new Vector3(-_lengthX, playerPos.y, playerPos.z);
-                    //}
-                    //else {
-                    //    Player.transform.position = new Vector3(playerPos.x, playerPos.y, -_lengthZ);
-                    //}
-                }
-
+                isFront = true;
                 break;
 
             case 180:
             case -90:
-                isFront = false; {
-                    //Vector3 playerPos = Player.transform.position;
-                    //if (!positionIsX) {
-                    //    Player.transform.position = new Vector3(_lengthX, playerPos.y, playerPos.z);
-                    //}
-                    //else {
-                    //    Player.transform.position = new Vector3(playerPos.x, playerPos.y, _lengthZ);
-                    //}
-                }
-
+                isFront = false;
                 break;
         }
 
@@ -327,10 +285,10 @@ public class TileMgr : MonoBehaviour {
         _lengthZ = length_z;
     }
 
-    public bool SetTile(GameObject mObject, int x, int y, int z, params string[] additional_val) {
-        if (mObject == null) return false;
-        if ((x < 0) || (y < 0) || (z < 0)) return false;
-        if (_mTileMap[x, y, z] != null) return false;
+    public GameObject SetTile(GameObject mObject, int x, int y, int z, params string[] additional_val) {
+        if (mObject == null) return null;
+        if ((x < 0) || (y < 0) || (z < 0)) return null;
+        if (_mTileMap[x, y, z] != null) return null;
 
         var deltaX = _lengthX/2f;
         var deltaY = _lengthY/2f;
@@ -376,14 +334,14 @@ public class TileMgr : MonoBehaviour {
         }
         //===================================
         //가변인자에 대한 내용
-        if (additional_val.Length <= 0) return true;
+        if (additional_val.Length <= 0) return _mTileMap[x, y, z];
 
         if (mObject == GoalTile) {
             ((GoalTileObject)obj).SetNextStageId(int.Parse(additional_val[0]));
         }
         else if (mObject == PortalTile) {
             TileShortcut tmp = FindTileShortcut(additional_val[2]);
-            if (tmp.name == null) return true;
+            if (tmp.name == null) return _mTileMap[x, y, z];
 
             ((PortalTile)obj).SetTargetStage(tmp.stage);
             ((PortalTile)obj).SetTargetTileId(tmp.pos, tmp.portalColor);
@@ -392,7 +350,7 @@ public class TileMgr : MonoBehaviour {
 
 
 
-        return true;
+        return _mTileMap[x, y, z];
     }
 
 
@@ -517,7 +475,7 @@ public class TileMgr : MonoBehaviour {
 
             }
 
-            if (values.Length == 4 || values.Length == 5 && values[0] == "GoalTile") {
+            if (values.Length == 4 || values.Length == 5) {
                 if (stringBuilder == null) {
                     stringBuilder = new StringBuilder();
                 }
@@ -673,9 +631,22 @@ public class TileMgr : MonoBehaviour {
                 tileObject = FountainTile;
                 break;
             case "NomalTile":
-            default:
+            default: {
+                string[] str = values[0].Replace(" ", "").Split('#');
+                if (str.Length > 1) {
+                    DecoTile tile = SetTile(FindDecoObject(str[1]), int.Parse(values[1]), int.Parse(values[2]),
+                    int.Parse(values[3])).GetComponent<DecoTile>();
+
+                    if (tile == null) return;
+
+                    tile.SetIgnoreBlock(values[4] == "true");
+
+                    return;
+
+                }
                 tileObject = NomalTile;
                 break;
+            }
         }
 
         SetTile(tileObject, int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3]));
@@ -705,6 +676,18 @@ public class TileMgr : MonoBehaviour {
         return new TileShortcut(-Vector3.one, -2, null, null, Color.black);
     }
 
+    private GameObject FindDecoObject(string name) {
+        for (int i = 0; i < DecoTile.transform.childCount; i++) {
+            GameObject tmp = DecoTile.transform.GetChild(i).gameObject;
+
+            if (tmp.transform.name == name) {
+                return tmp;
+            }
+        }
+
+        return null;
+
+    }
 
     //private void TemporaryInit() {
     //    SetMapSize(7, 6, 5);

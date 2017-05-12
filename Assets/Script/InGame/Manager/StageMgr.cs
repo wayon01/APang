@@ -16,13 +16,18 @@ public class StageMgr : MonoBehaviour {
 
     private bool isStageMoved;
     private bool isStageMoving;
+    private bool isAnimationUpdating;
     private Vector3 cameraPos;
     private Vector3 playerPos;
+
+    private APlayer player;
+    private float PortalTime;
 
     // Use this for initialization
     void Start () {
         //m_stageString = new Dictionary<int, StringReader>();
         tileMgr = TileManager.GetComponent<TileMgr>();
+        player = GameObject.Find("player").GetComponent<APlayer>();
 
         Init();
     }
@@ -31,6 +36,7 @@ public class StageMgr : MonoBehaviour {
         m_currentStage = 0;
         isStageMoved = false;
         isStageMoving = false;
+        isAnimationUpdating = false;
         cameraPos = Vector3.zero;
         playerPos = -Vector3.one;
     }
@@ -39,10 +45,24 @@ public class StageMgr : MonoBehaviour {
 	void Update () {
         if (!tileMgr.isLoad) return;
 
+	    if (isAnimationUpdating) {
+            if(PortalTime == 0)
+                player.OnTakePortal();
+
+            PortalTime += Time.deltaTime;
+
+	        if (PortalTime >= 1) {
+	            isAnimationUpdating = false;
+	            PortalTime = 0;
+	        }
+
+            return;
+	    }
+
         if (isStageMoved) {
 
-	        if (MainCamera.transform.localPosition.x < -15.9f) {
-	            cameraPos.x = 0;
+	        if (MainCamera.transform.localPosition.y > 15.9f) {
+	            cameraPos.y = 0;
                 tileMgr.SettingMap(m_currentStage);
                 isStageMoved = false;
 	            if (playerPos != -Vector3.one) {
@@ -51,17 +71,18 @@ public class StageMgr : MonoBehaviour {
 	                playerPos = -Vector3.one;
 	            }
 	        }else
-	            cameraPos.x = -16;
+	            cameraPos.y = 16;
 	    }
 
 	    if (isStageMoving) {
 	        MainCamera.transform.localPosition = Vector3.LerpUnclamped(MainCamera.transform.localPosition, cameraPos, 0.1f);
 
 	        if (!isStageMoved &&
-                Math.Abs(Math.Abs(MainCamera.transform.localPosition.x) - Math.Abs(cameraPos.x)) < 0.1f) {
-                cameraPos.x = 0;
+                Math.Abs(Math.Abs(MainCamera.transform.localPosition.y) - Math.Abs(cameraPos.y)) < 0.1f) {
+                cameraPos.y = 0;
                 MainCamera.transform.localPosition = cameraPos;
                 isStageMoving = false;
+	            isAnimationUpdating = true;
 	        }
 	    }
 	}
@@ -94,6 +115,7 @@ public class StageMgr : MonoBehaviour {
         m_currentStage = stageId;
         isStageMoved = true;
         isStageMoving = true;
+        isAnimationUpdating = true;
         //tileMgr.SettingMap(stageId);
         cameraPos = MainCamera.transform.localPosition;
         tileMgr.GameSystemManager.GetComponent<GameSystemMgr>().isCleared = false;

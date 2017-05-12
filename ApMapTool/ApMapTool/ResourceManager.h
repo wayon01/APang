@@ -13,7 +13,7 @@ public:
 	~ResourceManager();
 
 	void SetTile(int id, int x, int y, int z) const;
-	void SetTile(int stageId, int id, std::vector<std::string>) const;
+	void SetTile(int stageId, int id, std::vector<std::string> value) const;
 	void SetMapSize(int x, int y, int z) const;
 	void SetMapSize(int stageId, int x, int y, int z) const;
 	MapProc* GetMapProc() const {

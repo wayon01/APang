@@ -19,5 +19,5 @@ FireTile, 6, 0, 0
 NomalTile, 6, 0, 1
 FireTile, 4, 3, 0
 GrassTile, 5, 2, 0
-PortalTile, 4, 0, 0, -1, No Name, No Target
+PortalTile, 4, 0, 0, -1, NoName, NoTarget
 #end

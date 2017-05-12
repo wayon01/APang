@@ -16,6 +16,7 @@ public:
 
 	void SetTile(int id, int x, int y, int z);
 	void SetTile(int id, int x, int y, int z, int nextStageId);
+	void SetDecoTile(int id, int x, int y, int z, bool isEnable);
 	void SetWarpTile(int id, int x, int y, int z, int nextStageId, std::string name, std::string targetName);
 	void SetMapSize(int x, int y, int z);
 	void RefreshMap();

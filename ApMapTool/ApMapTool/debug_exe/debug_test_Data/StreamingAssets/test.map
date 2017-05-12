@@ -3,4 +3,13 @@
 #STAGE, 0
 6, 6, 6
 
+SpawnTile, 0, 0, 0
+GoalTile, 5, 0, 0, -1
+NomalTile, 1, 0, 0
+NomalTile, 2, 0, 0
+NomalTile, 3, 0, 0
+NomalTile, 4, 0, 0
+DecoTile # FountainTile, 2, 1, 0, false
+DecoTile # FountainTile, 4, 1, 0, true
+GrassTile, 4, 0, 1
 #end

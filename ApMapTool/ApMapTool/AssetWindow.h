@@ -15,6 +15,7 @@ public:
 	void SaveAssetList() const;
 
 	void SetAssetInfo(std::string name, std::string strId, std::string filePath);
+	void SetAssetInfo(std::string name, std::string strId, std::string filePath, std::string tileName);
 
 	
 

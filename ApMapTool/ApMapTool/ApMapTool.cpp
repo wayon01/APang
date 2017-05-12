@@ -392,6 +392,7 @@ INT_PTR CALLBACK AddAssetDig(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 				auto hName = GetDlgItem(hDlg, IDC_ASSETNAMEEDIT);
 				auto hId = GetDlgItem(hDlg, IDC_ASSETIDEDIT);
 				auto hFilePath = GetDlgItem(hDlg, IDC_TEXTUREPATH);
+				auto hDecoCheck = GetDlgItem(hDlg, IDC_DECOCHECK);
 
 
 				char hNameStr[256];
@@ -402,7 +403,13 @@ INT_PTR CALLBACK AddAssetDig(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 				GetWindowTextA(hId, hIdStr, 256);
 				GetWindowTextA(hFilePath, hFilePathStr, 256);
 
-				assetWindow.SetAssetInfo(hNameStr, hIdStr, hFilePathStr);
+				if(SendMessage(hDecoCheck, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+					assetWindow.SetAssetInfo(hNameStr, "DecoTile", hFilePathStr, hIdStr);
+				}else {
+					assetWindow.SetAssetInfo(hNameStr, hIdStr, hFilePathStr);
+				}
+
+				
 			}
 
 			EndDialog(hDlg, LOWORD(wParam));
