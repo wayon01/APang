@@ -26,6 +26,9 @@ public class GameSystemMgr : MonoBehaviour {
     public int[] m_playerMovementMaximum;
     public int m_playerScore;
 
+    public int m_switchMaximum;
+    public int m_switchCount;
+
     private Vector3 selectedTilePosition;
     private Vector3 prevPlayerPosition;
     private Vector3 lerpedPosition;
@@ -34,16 +37,16 @@ public class GameSystemMgr : MonoBehaviour {
     private Vector3 mapLength;
 
     private float MovingTime;
-    private Quaternion PlayerLocalRotation;
 
 	// Use this for initialization
 	void Start () {
 	    tileMgr = TileManager.GetComponent<TileMgr>();
 	    Player = PlayerObject.GetComponent<APlayer>();
-	    PlayerLocalRotation = Player.transform.rotation;
 	    cameraMgr = tileMgr.CameraManager.GetComponent<CameraMgr>();
         mapLength = Vector3.zero;
 	    m_playerScore = 3;
+	    m_switchMaximum = 0;
+	    m_switchCount = 0;
 
         m_playerMovementMaximum = new int[2];
 

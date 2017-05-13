@@ -72,6 +72,7 @@ public class TileMgr : MonoBehaviour {
     public GameObject MushroomTile = null;
     public GameObject FountainTile = null;
     public GameObject PortalTile = null;
+    public GameObject RingTile = null;
 
     public GameObject DecoTile = null;
 
@@ -283,6 +284,21 @@ public class TileMgr : MonoBehaviour {
         _lengthX = length_x;
         _lengthY = length_y;
         _lengthZ = length_z;
+    }
+
+    public void SetTile(GameObject mObject) {
+        if (mObject == null) return;
+
+        TileObject obj = mObject.GetComponent<TileObject>();
+        int x = (int)obj.id.x;
+        int y = (int)obj.id.y;
+        int z = (int)obj.id.z;
+
+        if ((x < 0) || (y < 0) || (z < 0)) return;
+        if (_mTileMap[x, y, z] != null) return;
+
+        _mTileMap[x, y, z] = mObject;
+
     }
 
     public GameObject SetTile(GameObject mObject, int x, int y, int z, params string[] additional_val) {
@@ -630,6 +646,11 @@ public class TileMgr : MonoBehaviour {
             case "FountainTile":
                 tileObject = FountainTile;
                 break;
+            case "RingTile": {
+                tileObject = RingTile;
+                gameSystemMgr.m_switchMaximum++;
+                break;
+            }
             case "NomalTile":
             default: {
                 string[] str = values[0].Replace(" ", "").Split('#');
