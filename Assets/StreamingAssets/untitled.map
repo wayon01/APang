@@ -1,0 +1,7 @@
+#MOVEMENT, 0, 0
+
+#STAGE, 0
+6, 6, 6
+
+RingTile, 0, 0, 0
+#end
