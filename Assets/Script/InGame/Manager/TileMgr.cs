@@ -294,31 +294,19 @@ public class TileMgr : MonoBehaviour {
         int y = (int)obj.id.y;
         int z = (int)obj.id.z;
 
+        var deltaX = _lengthX / 2f;
+        var deltaY = _lengthY / 2f;
+        var deltaZ = _lengthZ / 2f;
+
+        obj.Position = new Vector3(x - deltaX, y - deltaY, z - deltaZ);
+
         if ((x < 0) || (y < 0) || (z < 0)) return;
         if (_mTileMap[x, y, z] != null) return;
 
         _mTileMap[x, y, z] = mObject;
-
-    }
-
-    public GameObject SetTile(GameObject mObject, int x, int y, int z, params string[] additional_val) {
-        if (mObject == null) return null;
-        if ((x < 0) || (y < 0) || (z < 0)) return null;
-        if (_mTileMap[x, y, z] != null) return null;
-
-        var deltaX = _lengthX/2f;
-        var deltaY = _lengthY/2f;
-        var deltaZ = _lengthZ/2f;
-
-        _mTileMap[x, y, z] = Instantiate(mObject);
-
-        TileObject obj = _mTileMap[x, y, z].GetComponent<TileObject>();
-
-        obj.Position = new Vector3(x - deltaX, y - deltaY, z - deltaZ);
-        obj.id = new Vector3(x, y, z);
+        obj.Init();
         obj.resetPosition();
 
-        obj.Init();
 
         //--
 
@@ -329,35 +317,56 @@ public class TileMgr : MonoBehaviour {
         }
 
         if (m_tileArea[y].z[z].id_back == -1 ||
-                m_tileArea[y].z[z].id_back < x)
-        {
+                m_tileArea[y].z[z].id_back < x) {
             m_tileArea[y].z[z].back = _mTileMap[x, y, z];
             m_tileArea[y].z[z].id_back = x;
         }
 
         if (m_tileArea[y].x[x].id_front == -1 ||
-                m_tileArea[y].x[x].id_front > z)
-        {
+                m_tileArea[y].x[x].id_front > z) {
             m_tileArea[y].x[x].front = _mTileMap[x, y, z];
             m_tileArea[y].x[x].id_front = z;
         }
 
         if (m_tileArea[y].x[x].id_back == -1 ||
-                m_tileArea[y].x[x].id_back < z)
-        {
+                m_tileArea[y].x[x].id_back < z) {
             m_tileArea[y].x[x].back = _mTileMap[x, y, z];
             m_tileArea[y].x[x].id_back = z;
         }
         //===================================
+
+    }
+
+    public GameObject SetTile(GameObject mObject, int x, int y, int z, params string[] additional_val) {
+        if (mObject == null) return null;
+        if ((x < 0) || (y < 0) || (z < 0)) return null;
+        //if (_mTileMap[x, y, z] != null) return null;
+
+        //var deltaX = _lengthX/2f;
+        //var deltaY = _lengthY/2f;
+        //var deltaZ = _lengthZ/2f;
+
+        GameObject result = Instantiate(mObject);
+
+        TileObject obj = result.GetComponent<TileObject>();
+
+        //obj.Position = new Vector3(x - deltaX, y - deltaY, z - deltaZ);
+        obj.id = new Vector3(x, y, z);
+        obj.transform.localPosition = new Vector3(-100, -100, -100);
+
+        obj.Init();
+
+        //==========================================
+
         //가변인자에 대한 내용
-        if (additional_val.Length <= 0) return _mTileMap[x, y, z];
+        if (additional_val.Length <= 0) return result;
 
         if (mObject == GoalTile) {
             ((GoalTileObject)obj).SetNextStageId(int.Parse(additional_val[0]));
         }
         else if (mObject == PortalTile) {
             TileShortcut tmp = FindTileShortcut(additional_val[2]);
-            if (tmp.name == null) return _mTileMap[x, y, z];
+            if (tmp.name == null) return result;
 
             ((PortalTile)obj).SetTargetStage(tmp.stage);
             ((PortalTile)obj).SetTargetTileId(tmp.pos, tmp.portalColor);
@@ -366,7 +375,7 @@ public class TileMgr : MonoBehaviour {
 
 
 
-        return _mTileMap[x, y, z];
+        return result;
     }
 
 
@@ -433,11 +442,53 @@ public class TileMgr : MonoBehaviour {
         string[] values = sources[0].Split(',');
 
         int stageLength = 0;
-        StringBuilder stringBuilder = null;
+        ArrayList stringBuilder = null;
         bool isStageAvailable = false;
 
         int index = 0;
         //source = sources[index];
+
+        while (index < sources.Length) {
+
+            source = sources[index];
+            source = source.Replace(" ", "");
+            values = source.Split(',');
+
+            //stage 설정
+            if (values[0] == "#STAGE") {
+                stageLength = int.Parse(values[1]);
+                index++;
+                continue;
+
+            }
+
+            //포탈타일
+            if (values[0] == "PortalTile") {
+                TileShortcut tmp_trace = FindTargetTileShortcut(values[5]);
+                Color tmp_color;
+                if (tmp_trace.name == null) {
+                    int randRGB = rand.Next(0, 2);
+
+                    float r = randRGB == 0 ? 0.075f : 0.925f * (float)rand.NextDouble() + 0.075f;
+                    float g = randRGB == 1 ? 0.075f : 0.925f * (float)rand.NextDouble() + 0.075f;
+                    float b = randRGB == 2 ? 0.075f : 0.925f * (float)rand.NextDouble() + 0.075f;
+
+                    tmp_color = new Color(r, g, b, 1);
+                }
+                else {
+                    tmp_color = tmp_trace.portalColor;
+                }
+                TileShortcut tmp = new TileShortcut(new Vector3(int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3])),
+                    stageLength, values[5], values[6], tmp_color);
+                m_tileShortcut.Add(tmp);
+            }
+
+            index++;
+
+        }
+
+        index = 0;
+        stageLength = 0;
         while (index < sources.Length) {
             source = sources[index];
             source = source.Replace(" ", "");
@@ -462,9 +513,9 @@ public class TileMgr : MonoBehaviour {
             //map size
             if (values.Length == 3) {
                 if (stringBuilder == null) {
-                    stringBuilder = new StringBuilder();
+                    stringBuilder = new ArrayList();
                 }
-                stringBuilder.AppendLine(source);
+                stringBuilder.Insert(0, source);
                 index++;
                 //source = fp.ReadLine();
                 continue;
@@ -474,7 +525,7 @@ public class TileMgr : MonoBehaviour {
             if (values[0] == "#STAGE") {
                 //첫 스테이지일 경우
                 if (!isStageAvailable) {
-                    stringBuilder = new StringBuilder();
+                    stringBuilder = new ArrayList();
                     isStageAvailable = true;
                     index++;
                     //source = fp.ReadLine();
@@ -484,7 +535,7 @@ public class TileMgr : MonoBehaviour {
                 int tmp = int.Parse(values[1]);
                 stageMgr.AddStageString(stringBuilder, stageLength);
                 stageLength = tmp;
-                stringBuilder = new StringBuilder();
+                stringBuilder = new ArrayList();
                 index++;
                 //source = fp.ReadLine();
                 continue;
@@ -493,37 +544,36 @@ public class TileMgr : MonoBehaviour {
 
             if (values.Length == 4 || values.Length == 5) {
                 if (stringBuilder == null) {
-                    stringBuilder = new StringBuilder();
+                    stringBuilder = new ArrayList();
                 }
-                stringBuilder.AppendLine(source);
+                stringBuilder.Add(ParseTile(values));
             }
 
             //포탈타일
             if (values[0] == "PortalTile") {
-                TileShortcut tmp_trace = FindTargetTileShortcut(values[5]);
-                Color tmp_color;
-                if (tmp_trace.name == null) {
-                    int randRGB = rand.Next(0, 2);
+                //TileShortcut tmp_trace = FindTargetTileShortcut(values[5]);
+                //Color tmp_color;
+                //if (tmp_trace.name == null) {
+                //    int randRGB = rand.Next(0, 2);
 
-                    float r = randRGB == 0 ? 0.075f : 0.925f * (float)rand.NextDouble() + 0.075f;
-                    float g = randRGB == 1 ? 0.075f : 0.925f * (float)rand.NextDouble() + 0.075f;
-                    float b = randRGB == 2 ? 0.075f : 0.925f * (float)rand.NextDouble() + 0.075f;
+                //    float r = randRGB == 0 ? 0.075f : 0.925f * (float)rand.NextDouble() + 0.075f;
+                //    float g = randRGB == 1 ? 0.075f : 0.925f * (float)rand.NextDouble() + 0.075f;
+                //    float b = randRGB == 2 ? 0.075f : 0.925f * (float)rand.NextDouble() + 0.075f;
 
-                    tmp_color = new Color(r, g, b, 1);
-                }
-                else {
-                    tmp_color = tmp_trace.portalColor;
-                }
-                TileShortcut tmp = new TileShortcut(new Vector3(int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3])),
-                    stageLength, values[5], values[6], tmp_color);
-                m_tileShortcut.Add(tmp);
+                //    tmp_color = new Color(r, g, b, 1);
+                //}
+                //else {
+                //    tmp_color = tmp_trace.portalColor;
+                //}
+                //TileShortcut tmp = new TileShortcut(new Vector3(int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3])),
+                //    stageLength, values[5], values[6], tmp_color);
+                //m_tileShortcut.Add(tmp);
 
                 if (stringBuilder == null) {
-                    stringBuilder = new StringBuilder();
+                    stringBuilder = new ArrayList();
                 }
-                stringBuilder.AppendLine(source);
+                stringBuilder.Add(ParseTile(values));
             }
-            //ParseTile(values);
 
             index++;
         }
@@ -543,72 +593,82 @@ public class TileMgr : MonoBehaviour {
         for (int x = 0; x < _lengthX; x++) {
             for (int y = 0; y < _lengthY; y++) {
                 for (int z = 0; z < _lengthZ; z++) {
-                    Destroy(_mTileMap[x, y, z]);
+                    if(_mTileMap[x, y, z] != null)
+                        _mTileMap[x, y, z].transform.localPosition = new Vector3(-100, -100, -100);
+                    _mTileMap[x, y, z] = null;
                 }
             }
         }
 
-        StringReader stringReader = new StringReader(stageMgr.GetStageStringReader(stageId).ToString());
-        string[] values;
-        string source = stringReader.ReadLine();
+        ArrayList stringReader = stageMgr.GetStageStringReader(stageId);
+        //string[] values;
+        //string source = stringReader.ReadLine();
 
 
-        while (source != null) {
-            source = source.Replace(" ", "");
-            values = source.Split(',');
+        for(int i = 0; i < stringReader.Count; i++) {
 
             //map size
-            if (values.Length == 3) {
+            if (i == 0) {
+                string source = stringReader[0] as string;
+                string[] values;
+                source = source.Replace(" ", "");
+                values = source.Split(',');
+
                 SetMapSize(int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
-                source = stringReader.ReadLine();
                 continue;
             }
-            ParseTile(values);
-            source = stringReader.ReadLine();
+
+            GameObject mObject = stringReader[i] as GameObject;
+
+            SetTile(mObject);
+
+            //ParseTile(values);
+            //source = stringReader.ReadLine();
 
         }
 
     }
 
-    private IEnumerator ParseAndroid(string mapPath) {
-        WWW File = new WWW(mapPath);
-        yield return File;
+    //private IEnumerator ParseAndroid(string mapPath) {
+    //    WWW File = new WWW(mapPath);
+    //    yield return File;
 
-        string source;
-        string[] sources = File.text.Split('\n');
+    //    string source;
+    //    string[] sources = File.text.Split('\n');
 
-        if (sources.Length == 0) {
-            yield return File;
-        }
+    //    if (sources.Length == 0) {
+    //        yield return File;
+    //    }
 
-        //Map Size
-        string[] values = sources[0].Split(',');
-        SetMapSize(int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
+    //    //Map Size
+    //    string[] values = sources[0].Split(',');
+    //    SetMapSize(int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
 
-        int index = 1;
-        source = sources[index];
-        while (index >= sources.Length) {
-            source = source.Replace(" ", "");
-            values = source.Split(',');
+    //    int index = 1;
+    //    source = sources[index];
+    //    while (index >= sources.Length) {
+    //        source = source.Replace(" ", "");
+    //        values = source.Split(',');
 
-            if (values.Length == 0) {
-                break;
-            }
+    //        if (values.Length == 0) {
+    //            break;
+    //        }
 
-            ParseTile(values);
+    //        ParseTile(values);
 
-            index++;
-            source = sources[index];
-        }
+    //        index++;
+    //        source = sources[index];
+    //    }
 
-    }
+    //}
 
-    private void ParseTile(string[] values) {
+    private GameObject ParseTile(string[] values) {
 
         if (values.Length < 4) {
-            return;
+            return null;
         }
 
+        GameObject result = null;
         GameObject tileObject = null;
 
         switch (values[0]) {
@@ -621,15 +681,13 @@ public class TileMgr : MonoBehaviour {
             case "GoalTile": {
                 tileObject = GoalTile;
                 if (values.Length > 4) {
-                    SetTile(tileObject, int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3]), values[4]);
-                    return;
+                    return SetTile(tileObject, int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3]), values[4]);
                 }
                 break;
             }
             case "PortalTile": {
                 tileObject = PortalTile;
-                SetTile(tileObject, int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3]), values[4], values[5], values[6]);
-                break;
+                return SetTile(tileObject, int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3]), values[4], values[5], values[6]);
             }
             case "FireTile":
                 tileObject = FireTile;
@@ -655,14 +713,15 @@ public class TileMgr : MonoBehaviour {
             default: {
                 string[] str = values[0].Replace(" ", "").Split('#');
                 if (str.Length > 1) {
-                    DecoTile tile = SetTile(FindDecoObject(str[1]), int.Parse(values[1]), int.Parse(values[2]),
-                    int.Parse(values[3])).GetComponent<DecoTile>();
+                    result = SetTile(FindDecoObject(str[1]), int.Parse(values[1]), int.Parse(values[2]),
+                        int.Parse(values[3]));
+                    DecoTile tile  = result.GetComponent<DecoTile>();
 
-                    if (tile == null) return;
+                    if (tile == null) return null;
 
                     tile.SetIgnoreBlock(values[4] == "true");
 
-                    return;
+                    return result;
 
                 }
                 tileObject = NomalTile;
@@ -670,14 +729,15 @@ public class TileMgr : MonoBehaviour {
             }
         }
 
-        SetTile(tileObject, int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3]));
+        result = SetTile(tileObject, int.Parse(values[1]), int.Parse(values[2]), int.Parse(values[3]));
+        return result;
     }
 
     private TileShortcut FindTileShortcut(string name) {
         for (int i = 0; i < m_tileShortcut.Count; i++) {
             TileShortcut tmp = (TileShortcut)m_tileShortcut[i];
 
-            if (tmp.name == name) {
+            if (tmp.name == name.Trim()) {
                 return tmp;
             }
         }

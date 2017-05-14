@@ -32,8 +32,13 @@ public class PortalTile : TileObject {
 
 
     }
-	
-	// Update is called once per frame
+
+    public override void Init() {
+        base.Init();
+        isPortalActived = false;
+    }
+
+    // Update is called once per frame
 	void Update () {
 	    if (!isPortalActived && gameSystemMgr.isPlayerMovingUp) {
 	        isPortalActived = true;

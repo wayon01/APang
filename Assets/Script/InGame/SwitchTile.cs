@@ -40,7 +40,7 @@ public class SwitchTile : TileObject {
             if (!isUsed) {
                 isUsed = true;
                 tweenScale.enabled = true;
-                gameSystemMgr.m_playerMovingCount++;
+                gameSystemMgr.m_switchCount++;
             }
         }
     }
@@ -51,7 +51,7 @@ public class SwitchTile : TileObject {
             if (!isUsed) {
                 isUsed = true;
                 tweenScale.enabled = true;
-                gameSystemMgr.m_playerMovingCount++;
+                gameSystemMgr.m_switchCount++;
             }
         }
     }
