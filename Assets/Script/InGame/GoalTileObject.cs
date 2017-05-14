@@ -28,6 +28,7 @@ public class GoalTileObject : TileObject {
         //transform.position = new Vector3(x, transform.position.y, transform.position.z);
         if (player.positionId.y == id.y && player.positionId.z == id.z) {
             if (stageNextId == -2) return;
+            if (gameSystemMgr.m_switchCount != gameSystemMgr.m_switchMaximum) return;
             gameSystemMgr.isCleared = true;
             gameSystemMgr.m_nextStageId = stageNextId;
         }
@@ -38,6 +39,7 @@ public class GoalTileObject : TileObject {
         //transform.position = new Vector3(transform.position.x, transform.position.y, z);
         if (player.positionId.y == id.y && player.positionId.x == id.x) {
             if (stageNextId == -2) return;
+            if (gameSystemMgr.m_switchCount != gameSystemMgr.m_switchMaximum) return;
             gameSystemMgr.isCleared = true;
             gameSystemMgr.m_nextStageId = stageNextId;
         }

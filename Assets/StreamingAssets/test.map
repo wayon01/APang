@@ -15,6 +15,7 @@ GrassTile, 4, 4, 0
 GrassTile, 5, 4, 0
 GoalTile, 0, 4, 4, -1
 GrassTile, 0, 4, 3
+RingTile, 1, 1, 1
 
 #STAGE, 1
 6, 6, 6

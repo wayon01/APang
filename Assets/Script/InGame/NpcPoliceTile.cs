@@ -48,16 +48,18 @@ public class NpcPoliceTile : AttackTile {
     public override void SetLocalX(float x) {
         base.SetLocalX(x);
         //transform.position = new Vector3(x, transform.position.y, transform.position.z);
-        if (player.positionId.y + 1 == id.y && player.positionId.z == id.z) {
+        if (!gameSystemMgr.isFailed && player.positionId.y + 1 == id.y && player.positionId.z == id.z) {
             gameSystemMgr.isFailed = true;
+            transform.localPosition = player.transform.localPosition + new Vector3(0, 0.6f, 0);
         }
     }
 
     public override void SetLocalZ(float z) {
         base.SetLocalZ(z);
         //transform.position = new Vector3(transform.position.x, transform.position.y, z);
-        if (player.positionId.y + 1 == id.y && player.positionId.x == id.x) {
+        if (!gameSystemMgr.isFailed && player.positionId.y + 1 == id.y && player.positionId.x == id.x) {
             gameSystemMgr.isFailed = true;
+            transform.localPosition = player.transform.localPosition + new Vector3(0, 0.6f, 0); ;
         }
     }
 

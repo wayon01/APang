@@ -1,11 +1,48 @@
-﻿  MainProc.cpp
+﻿  ApMapTool.cpp
+d:\programming\unity\앙팡\apmaptool\apmaptool\RenderWindow.h(48): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programming\unity\앙팡\apmaptool\apmaptool\MapProc.h(51): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+ApMapTool.cpp(14): warning C4005: '_CRT_SECURE_NO_WARNINGS': 매크로 재정의
+  ApMapTool.cpp(14): note: 명령줄 인수: '_CRT_SECURE_NO_WARNINGS'의 이전 정의를 참조하십시오.
+ApMapTool.cpp(250): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+ApMapTool.cpp(251): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+ApMapTool.cpp(252): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+ApMapTool.cpp(253): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  AssetProc.cpp
+AssetProc.cpp(63): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  AssetWindow.cpp
+d:\programming\unity\앙팡\apmaptool\apmaptool\MapProc.h(51): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  DecoTile.cpp
+  DetailWindow.cpp
+d:\programming\unity\앙팡\apmaptool\apmaptool\MapProc.h(51): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+DetailWindow.cpp(31): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+DetailWindow.cpp(175): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  MainProc.cpp
 d:\programming\unity\앙팡\apmaptool\apmaptool\MapProc.h(51): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 MainProc.cpp(176): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
 MainProc.cpp(188): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  MapProc.cpp
+d:\programming\unity\앙팡\apmaptool\apmaptool\MapProc.h(51): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+MapProc.cpp(158): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  RenderWindow.cpp
+d:\programming\unity\앙팡\apmaptool\apmaptool\RenderWindow.h(48): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+RenderWindow.cpp(266): warning C4060: switch문에 'case' 또는 'default' 레이블이 없습니다.
+RenderWindow.cpp(373): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  ResourceManager.cpp
+d:\programming\unity\앙팡\apmaptool\apmaptool\MapProc.h(51): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  RouteSimulation.cpp
+d:\programming\unity\앙팡\apmaptool\apmaptool\MapProc.h(51): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programming\unity\앙팡\apmaptool\apmaptool\Vector.h(103): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  d:\programming\unity\앙팡\apmaptool\apmaptool\Vector.h(103): note: 클래스 템플릿 멤버 함수 'Vector3<int>::Vector3(void)'을(를) 컴파일하고 있습니다.
+  RouteSimulation.cpp(133): note: 컴파일 중인 함수 템플릿 인스턴스화 'Vector3<int>::Vector3(void)'에 대한 참조를 확인하십시오.
+  d:\programming\unity\앙팡\apmaptool\apmaptool\TileShortcut.h(5): note: 컴파일 중인 클래스 템플릿 인스턴스화 'Vector3<int>'에 대한 참조를 확인하십시오.
+  StageWindow.cpp
+d:\programming\unity\앙팡\apmaptool\apmaptool\MapProc.h(51): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+StageWindow.cpp(78): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+StageWindow.cpp(91): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
   코드를 생성하고 있습니다.
-  7 of 1816 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+  0 of 1816 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    15 functions had inline decision re-evaluated but remain unchanged
+    24 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   ApMapTool.vcxproj -> D:\Programming\Unity\앙팡\ApMapTool\Release\ApMapTool.exe
   ApMapTool.vcxproj -> D:\Programming\Unity\앙팡\ApMapTool\Release\ApMapTool.pdb (Full PDB)
