@@ -1,15 +1,52 @@
-#MOVEMENT, 0, 0
+#MOVEMENT, 21, 26
 
 #STAGE, 0
-6, 6, 6
+7, 6, 7
 
-SpawnTile, 0, 0, 0
-GoalTile, 5, 0, 0, -1
-NomalTile, 1, 0, 0
-NomalTile, 2, 0, 0
-NomalTile, 3, 0, 0
-NomalTile, 4, 0, 0
-DecoTile # FountainTile, 2, 1, 0, false
-DecoTile # FountainTile, 4, 1, 0, true
-GrassTile, 4, 0, 1
+GrassTile, 2, 2, 2
+FireTile, 1, 3, 3
+FireTile, 4, 2, 2
+GrassTile, 5, 3, 3
+SpawnTile, 3, 1, 1
+PortalTile, 4, 4, 4, 0, door2, area2_0
+PortalTile, 2, 4, 4, 0, door1, area1_0
+
+#STAGE, 1
+7, 7, 7
+
+PortalTile, 1, 5, 4, 1, area1_0, door1
+FireTile, 2, 4, 5
+GrassTile, 1, 3, 6
+FireTile, 5, 5, 3
+NpcPoliceTile, 5, 6, 3
+NpcPoliceTile, 0, 3, 4
+FireTile, 0, 3, 3
+GrassTile, 4, 3, 6
+GrassTile, 0, 2, 4
+GrassTile, 3, 2, 1
+FireTile, 3, 2, 4
+NomalTile, 4, 1, 2
+RingTile, 4, 2, 2
+
+#STAGE, 2
+7, 7, 8
+
+PortalTile, 0, 0, 2, 2, area2_0, NoTarget
+FireTile, 6, 0, 2
+NpcPoliceTile, 6, 1, 2
+GrassTile, 1, 1, 3
+FireTile, 2, 2, 5
+GrassTile, 5, 2, 5
+NpcPoliceTile, 5, 3, 5
+GrassTile, 2, 0, 2
+PortalTile, 1, 1, 6, 2, 2-2, 2-1
+PortalTile, 2, 0, 4, 2, 2-1, 2-2
+PortalTile, 5, 4, 7, 2, 2-4, 2-3
+GrassTile, 2, 5, 6
+FireTile, 3, 6, 5
+FireTile, 2, 5, 3
+GoalTile, 3, 4, 2, -1
+PortalTile, 4, 0, 7, 2, 2-3, 2-4
+FireTile, 4, 1, 1
+NpcPoliceTile, 4, 2, 1
 #end
