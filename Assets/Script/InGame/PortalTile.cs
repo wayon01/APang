@@ -40,7 +40,7 @@ public class PortalTile : TileObject {
 
     // Update is called once per frame
 	void Update () {
-	    if (!isPortalActived && gameSystemMgr.isPlayerMovingUp) {
+	    if (!isPortalActived && gameSystemMgr.isPlayerMoving) {
 	        isPortalActived = true;
 	    }
 
@@ -58,7 +58,8 @@ public class PortalTile : TileObject {
         //transform.position = new Vector3(x, transform.position.y, transform.position.z);
         if (player.positionId.y == id.y && player.positionId.z == id.z) {
             if (targetStage == -2) return;
-            gameSystemMgr.isCleared = true;
+            gameSystemMgr.isPortalArrived = true;
+            gameSystemMgr.isCleared = false;
             gameSystemMgr.m_nextStageId = targetStage;
             stageMgr.SetPlayerId(targetTileId);
             
@@ -73,7 +74,8 @@ public class PortalTile : TileObject {
         //transform.position = new Vector3(transform.position.x, transform.position.y, z);
         if (player.positionId.y == id.y && player.positionId.x == id.x) {
             if (targetStage == -2) return;
-            gameSystemMgr.isCleared = true;
+            gameSystemMgr.isPortalArrived = true;
+            gameSystemMgr.isCleared = false;
             gameSystemMgr.m_nextStageId = targetStage;
             stageMgr.SetPlayerId(targetTileId);
         }

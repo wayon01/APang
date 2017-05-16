@@ -79,6 +79,7 @@ public class TileMgr : MonoBehaviour {
     public bool isClicked;
     public bool isLoad;
     private bool isResetTilePosition;
+    private bool isMouseUp;
 
     private Random rand;
 
@@ -86,6 +87,7 @@ public class TileMgr : MonoBehaviour {
     void Start() {
         isResetTilePosition = true;
         isClicked = false;
+        isMouseUp = false;
         CameraManager = GameObject.Find("CameraManager");
         _cameraMgr = CameraManager.GetComponent<CameraMgr>();
         gameSystemMgr = GameSystemManager.GetComponent<GameSystemMgr>();
@@ -104,7 +106,7 @@ public class TileMgr : MonoBehaviour {
             path = "jar:file://" + Application.dataPath + "!/assets/test.map";
         }
         else {
-            path = "file://" + Application.streamingAssetsPath + "/test.map";
+            path = "file://" + Application.streamingAssetsPath + "/stage3.map";
             //path = "file://" + Application.dataPath + "/Maps/test.map";
             //Debug.Log("path : " + path);
 
@@ -132,7 +134,7 @@ public class TileMgr : MonoBehaviour {
         if (gameSystemMgr.isPlayerMovingUp) {
             AllReshapeTilePosition((int)_cameraMgr.FinalRotationY);
         }
-        if (gameSystemMgr.isCleared && gameSystemMgr.m_nextStageId == -1) {
+        if ((gameSystemMgr.isPortalArrived || gameSystemMgr.isCleared) && gameSystemMgr.m_nextStageId == -1) {
             return;
         }
         if (gameSystemMgr.isFailed) {
@@ -159,13 +161,24 @@ public class TileMgr : MonoBehaviour {
     private void ReshapeTilePosition(bool isRelax, int rotationY) {
         if (!isRelax && !isResetTilePosition) {
             isResetTilePosition = true;
-            AllResetTilePosition(rotationY);
 
         }
-        else if (isRelax && isResetTilePosition) {
+
+        if (isRelax && isResetTilePosition) {
+            isMouseUp = false;
             isResetTilePosition = false;
             AllReshapeTilePosition(rotationY);
 
+        }
+
+        if (Input.GetMouseButtonUp(0)) {
+            isMouseUp = true;
+        }
+
+        if (gameSystemMgr.isPlayerMovingUp && isMouseUp) {
+            isMouseUp = false;
+            isResetTilePosition = false;
+            AllReshapeTilePosition(rotationY);
         }
     }
 

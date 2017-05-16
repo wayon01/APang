@@ -110,7 +110,7 @@ public class StageMgr : MonoBehaviour {
     public void SetStageChanged(int stageId) {
         if (stageId == -1) return;
         if (stageId == -2) {
-            tileMgr.GameSystemManager.GetComponent<GameSystemMgr>().isCleared = false;
+            tileMgr.GameSystemManager.GetComponent<GameSystemMgr>().isPortalArrived = false;
             tileMgr.GameSystemManager.GetComponent<GameSystemMgr>().isFailed = false;
             return;
         }
@@ -122,7 +122,7 @@ public class StageMgr : MonoBehaviour {
         isAnimationUpdating = true;
         //tileMgr.SettingMap(stageId);
         cameraPos = localCameraPos = MainCamera.transform.localPosition;
-        tileMgr.GameSystemManager.GetComponent<GameSystemMgr>().isCleared = false;
+        tileMgr.GameSystemManager.GetComponent<GameSystemMgr>().isPortalArrived = false;
     }
 
     public void SetPlayerId(Vector3 id) {

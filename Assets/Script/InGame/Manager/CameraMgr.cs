@@ -46,11 +46,11 @@ public class CameraMgr : MonoBehaviour {
     void Update() {
         if (!tileMgr.isLoad) return;
 
-        if (gameSystemMgr.isCleared || gameSystemMgr.isFailed || gameSystemMgr.isPause) {
+        if (gameSystemMgr.isPortalArrived || gameSystemMgr.isFailed || gameSystemMgr.isPause) {
             accrueResultTime += Time.deltaTime;
 
             if ((gameSystemMgr.isFailed && accrueResultTime > 1f) ||
-                gameSystemMgr.isCleared ||
+                gameSystemMgr.isPortalArrived ||
                 gameSystemMgr.isPause) {
 
                 if (accrueStartResultTime == -1) {

@@ -9,6 +9,7 @@ public class GameSystemMgr : MonoBehaviour {
     public GameObject PlayerObject;
     public GameObject TileManager;
 
+    public bool isPortalArrived;
     public bool isCleared;
     public bool isFailed;
     public bool isPause;
@@ -55,9 +56,10 @@ public class GameSystemMgr : MonoBehaviour {
 	}
 
     public void Init() {
-        isCleared = false;
+        isPortalArrived = false;
         isFailed = false;
         isPause = false;
+        isCleared = false;
         m_playerMovingCount = 0;
 
         MovingTime = 1;
@@ -81,7 +83,7 @@ public class GameSystemMgr : MonoBehaviour {
 	        tileMgr.isClicked = false;
 	    }
 
-	    if (isCleared) {
+	    if (isPortalArrived) {
 	        tileMgr.StageManager.GetComponent<StageMgr>().SetStageChanged(m_nextStageId);
 	    }
 

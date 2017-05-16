@@ -28,7 +28,11 @@ public class SwitchTile : TileObject {
 	    if (gameSystemMgr.isFailed && !collider.enabled) {
             collider.enabled = true;
         }
-	}
+
+        if (!Input.GetMouseButtonDown(0) && !Input.GetMouseButton(0))
+            transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, 0.1f);
+
+    }
 
     public override void Init() {
         base.Init();

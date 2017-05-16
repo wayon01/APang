@@ -23,7 +23,7 @@ public class StagePauseUI : MonoBehaviour {
 	}
 
     public void OnClickedEvent() {
-        if (gameSystemMgr.isFailed || gameSystemMgr.isCleared) return;
+        if (gameSystemMgr.isFailed || gameSystemMgr.isPortalArrived || gameSystemMgr.isCleared) return;
 
         gameSystemMgr.isPause = isPause;
 
@@ -46,7 +46,7 @@ public class StagePauseUI : MonoBehaviour {
     }
 
     public void SetPause(bool pause) {
-        if (gameSystemMgr.isFailed || gameSystemMgr.isCleared) return;
+        if (gameSystemMgr.isFailed || gameSystemMgr.isPortalArrived || gameSystemMgr.isCleared) return;
         isPause = gameSystemMgr.isPause = pause;
     }
 }

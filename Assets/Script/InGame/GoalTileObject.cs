@@ -29,6 +29,7 @@ public class GoalTileObject : TileObject {
         if (player.positionId.y == id.y && player.positionId.z == id.z) {
             if (stageNextId == -2) return;
             if (gameSystemMgr.m_switchCount != gameSystemMgr.m_switchMaximum) return;
+            gameSystemMgr.isPortalArrived = true;
             gameSystemMgr.isCleared = true;
             gameSystemMgr.m_nextStageId = stageNextId;
         }
@@ -40,6 +41,7 @@ public class GoalTileObject : TileObject {
         if (player.positionId.y == id.y && player.positionId.x == id.x) {
             if (stageNextId == -2) return;
             if (gameSystemMgr.m_switchCount != gameSystemMgr.m_switchMaximum) return;
+            gameSystemMgr.isPortalArrived = true;
             gameSystemMgr.isCleared = true;
             gameSystemMgr.m_nextStageId = stageNextId;
         }
