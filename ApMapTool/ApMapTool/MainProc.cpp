@@ -55,9 +55,19 @@ void MainProc::ReadMapFile() {
 	int stageCount = 0;
 	bool isStageAvailable = false;
 
+	TileNode* prev_node = nullptr;
+
 	while(getline(fin, buf)) {
 
 		if (buf == "") continue;
+
+		{
+			auto mapVector = RESMGR->GetMapProc()->GetTiles();
+			if (mapVector.size() > 0) {
+				prev_node = RESMGR->GetMapProc()->GetTiles().back();
+			}
+		}
+		
 
 		std::vector<std::string> lit;
 		Split(lit, replace_all(buf, " ", ""), ",", true);
@@ -66,6 +76,15 @@ void MainProc::ReadMapFile() {
 		if(lit[0] == "#MOVEMENT") {
 			m_goldValue = std::atoi(lit[1].c_str());
 			m_silverValue = std::atoi(lit[2].c_str());
+		}
+
+		if(lit[0] == "#Speech" && prev_node != nullptr) {
+			prev_node->m_additionalBooleanType["말풍선 적용"] = true;
+			std::string str = replace_all(lit[4], "_", " ");
+			prev_node->m_additionalStringType.insert(std::pair<std::string, std::string>("말풍선 내용", str));
+			prev_node = nullptr;
+
+			continue;
 		}
 
 		//스테이지
@@ -199,12 +218,18 @@ void MainProc::SaveMapFile(std::string str) const {
 			if(id == "GoalTile") {
 				GoalTileNode* tmp_goal = static_cast<GoalTileNode*>(tile);
 				fout << id << ", " << tile->x << ", " << tile->y << ", " << tile->z << ", " << tmp_goal->m_additionalIntegerType["Area ID"] << std::endl;
+				if(tile->m_additionalBooleanType["말풍선 적용"]) {
+					fout << "#Speech, " << tile->x << ", " << tile->y << ", " << tile->z << ", " << replace_all(tile->m_additionalStringType["말풍선 내용"], " ", "_") << std::endl;
+				}
 				continue;
 			}
 
 			if(id == "PortalTile") {
 				WarpTileNode* tmp_warp = static_cast<WarpTileNode*>(tile);
 				fout << id << ", " << tile->x << ", " << tile->y << ", " << tile->z << ", " << tmp_warp->m_additionalIntegerType["Area ID"] << ", " << tmp_warp->m_additionalStringType["타일 이름"] << ", " << tmp_warp->m_additionalStringType["이동할 타일 이름"] << std::endl;
+				if (tile->m_additionalBooleanType["말풍선 적용"]) {
+					fout << "#Speech, " << tile->x << ", " << tile->y << ", " << tile->z << ", " << replace_all(tile->m_additionalStringType["말풍선 내용"], " ", "_") << std::endl;
+				}
 				continue;
 			}
 
@@ -212,9 +237,15 @@ void MainProc::SaveMapFile(std::string str) const {
 				DecoTile* tmp_deco = static_cast<DecoTile*>(tile);
 				std::string tmp_deco_enable = tmp_deco->m_additionalBooleanType["타일인식"] ? "true" : "false";
 				fout << "DecoTile" << " # " << asset_proc->FindDecoTileIdStr(tile->id) << ", " << tile->x << ", " << tile->y << ", " << tile->z << ", " << tmp_deco_enable << std::endl;
+				if (tile->m_additionalBooleanType["말풍선 적용"]) {
+					fout << "#Speech, " << tile->x << ", " << tile->y << ", " << tile->z << ", " << replace_all(tile->m_additionalStringType["말풍선 내용"], " ", "_") << std::endl;
+				}
 				continue;
 			}
 			fout << id << ", " << tile->x << ", " << tile->y << ", " << tile->z << std::endl;
+			if (tile->m_additionalBooleanType["말풍선 적용"]) {
+				fout << "#Speech, " << tile->x << ", " << tile->y << ", " << tile->z << ", " << replace_all(tile->m_additionalStringType["말풍선 내용"], " ", "_") << std::endl;
+			}
 		}
 	}
 	

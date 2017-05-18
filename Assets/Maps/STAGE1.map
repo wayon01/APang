@@ -5,6 +5,7 @@
 
 SpawnTile, 0, 0, 2
 NomalTile, 1, 0, 1
+#Speech, 1, 0, 1, µ¥Çò_¶ç¾î¾²±â_Å×½ºÆ®Áö·Õ~
 GrassTile, 3, 1, 3
 FireTile, 4, 2, 4
 PortalTile, 5, 2, 4, 0, area0_1, area1_1

@@ -28,7 +28,10 @@ public:
 	void DeleteMap(int stageId);
 
 	std::vector<TileNode*> GetTiles() {
-		return m_map_stage[m_stageId]->m_map;
+		if(m_map_stage.size() > 0)
+			return m_map_stage[m_stageId]->m_map;
+
+		return std::vector<TileNode*>();
 	}
 
 	TileNode* GetTile(ivec3 posId);

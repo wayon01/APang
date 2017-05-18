@@ -5,12 +5,12 @@
 
 
 DetailWindow::DetailWindow() {
-	
+
 }
 
 
 DetailWindow::~DetailWindow() {
-	
+
 }
 
 
@@ -24,58 +24,77 @@ LRESULT DetailWindow::OnCreate(HWND hWnd, WPARAM wParam, LPARAM lParam) {
 LRESULT DetailWindow::OnDefault(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
 
 	switch (Msg) {
-	case WM_COMMAND: {
-		if (m_currentTile == nullptr) break;
-		WORD cmdMsg = LOWORD(wParam);
+		case WM_COMMAND: {
+			if (m_currentTile == nullptr) break;
+			WORD cmdMsg = LOWORD(wParam);
 
-		for (int i = 0; i < m_detail.size(); i++) {
-			TileDetail& tmp = m_detail[i];
+			for (int i = 0; i < m_detail.size(); i++) {
+				TileDetail& tmp = m_detail[i];
 
-			if (cmdMsg == i) {
+				if (cmdMsg == i) {
 
-				if (tmp.id == ID_INT) {
+					if (tmp.id == ID_INT) {
 
-					switch (HIWORD(wParam)) {
-					case EN_CHANGE: {
-						char str[128];
-						GetWindowTextA(tmp.value, str, 128);
-						SetWindowTextA(hWnd, str);
+						switch (HIWORD(wParam)) {
+							case EN_CHANGE: {
+								char str[128];
+								GetWindowTextA(tmp.value, str, 128);
+								SetWindowTextA(hWnd, str);
 
-						m_currentTile->m_additionalIntegerType[tmp.strName] = std::atoi(str);
-						RESMGR->SetTitleUnSaved();
+								m_currentTile->m_additionalIntegerType[tmp.strName] = std::atoi(str);
+								RESMGR->SetTitleUnSaved();
 
-						break;
+								break;
+							}
+						}
 					}
-					}
-				} else if (tmp.id == ID_STRING) {
-					switch (HIWORD(wParam)) {
-					case EN_CHANGE: {
-						char str[128];
-						GetWindowTextA(tmp.value, str, 128);
-						SetWindowTextA(hWnd, str);
+					else if (tmp.id == ID_STRING) {
+						switch (HIWORD(wParam)) {
+							case EN_CHANGE: {
+								char str[128];
+								GetWindowTextA(tmp.value, str, 128);
+								SetWindowTextA(hWnd, str);
 
-						m_currentTile->m_additionalStringType[tmp.strName] = str;
-						RESMGR->SetTitleUnSaved();
+								m_currentTile->m_additionalStringType[tmp.strName] = str;
+								RESMGR->SetTitleUnSaved();
 
-						break;
-					}
-					}
+								break;
+							}
+						}
 
-				}else if(tmp.id == ID_BOOL) {
-					if (SendMessage(tmp.value, BM_GETCHECK, 0, 0) == BST_UNCHECKED) {
-						SendMessage(tmp.value, BM_SETCHECK, BST_CHECKED, 0);
-						m_currentTile->m_additionalBooleanType[tmp.strName] = true;
-						RESMGR->SetTitleUnSaved();
-					} else {
-						SendMessage(tmp.value, BM_SETCHECK, BST_UNCHECKED, 0);
-						m_currentTile->m_additionalBooleanType[tmp.strName] = false;
-						RESMGR->SetTitleUnSaved();
+					}
+					else if (tmp.id == ID_BOOL) {
+						if (SendMessage(tmp.value, BM_GETCHECK, 0, 0) == BST_UNCHECKED) {
+							SendMessage(tmp.value, BM_SETCHECK, BST_CHECKED, 0);
+							m_currentTile->m_additionalBooleanType[tmp.strName] = true;
+							RESMGR->SetTitleUnSaved();
+						}
+						else {
+							SendMessage(tmp.value, BM_SETCHECK, BST_UNCHECKED, 0);
+							m_currentTile->m_additionalBooleanType[tmp.strName] = false;
+							RESMGR->SetTitleUnSaved();
+						}
+
+						//말풍선 적용
+						if (tmp.strName == "말풍선 적용") {
+							if (m_currentTile->m_additionalBooleanType[tmp.strName]) {
+								if (m_currentTile->m_additionalStringType.find("말풍선 내용") == m_currentTile->m_additionalStringType.end()) {
+									m_currentTile->m_additionalStringType.insert(std::pair<std::string, std::string>("말풍선 내용", ""));
+									LoadCurrentTileInfo();
+								}
+							}
+							else {
+								if (m_currentTile->m_additionalStringType.find("말풍선 내용") != m_currentTile->m_additionalStringType.end()) {
+									m_currentTile->m_additionalStringType.erase("말풍선 내용");
+									LoadCurrentTileInfo();
+								}
+							}
+						}
 					}
 				}
 			}
+			break;
 		}
-		break;
-	}
 	}
 	return DefWindowProc(hWnd, Msg, wParam, lParam);
 
@@ -84,7 +103,7 @@ LRESULT DetailWindow::OnDefault(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPara
 
 LRESULT DetailWindow::OnKeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam) {
 
-	if(GetAsyncKeyState(VK_DELETE) & 0x8001) {
+	if (GetAsyncKeyState(VK_DELETE) & 0x8001) {
 		if (MessageBoxA(hWnd, "진짜 삭제할거에요?", "경고", MB_OKCANCEL | MB_ICONWARNING) == IDOK) {
 
 		}
@@ -103,9 +122,9 @@ void DetailWindow::LoadCurrentTileInfo() {
 	DeleteHWnd();
 
 	TileNode cur = RESMGR->GetMapProc()->GetCurTile();
-	m_currentTile = RESMGR->GetMapProc()->GetTile(ivec3{ cur.x, cur.y, cur.z });
+	m_currentTile = RESMGR->GetMapProc()->GetTile(ivec3{cur.x, cur.y, cur.z});
 
-	if(m_currentTile == nullptr) {
+	if (m_currentTile == nullptr) {
 		return;
 	}
 
@@ -131,7 +150,7 @@ void DetailWindow::LoadCurrentTileInfo() {
 		y += 25;
 	}
 
-	for(const auto& pair : m_currentTile->m_additionalIntegerType) {
+	for (const auto& pair : m_currentTile->m_additionalIntegerType) {
 		TileDetail tmp;
 
 		tmp.name = CreateWindowA("static", pair.first.c_str(), WS_CHILD | WS_VISIBLE,
@@ -171,8 +190,9 @@ void DetailWindow::LoadCurrentTileInfo() {
 
 }
 
+
 void DetailWindow::DeleteHWnd() {
-	for(int i=0; i < m_detail.size(); i++) {
+	for (int i = 0; i < m_detail.size(); i++) {
 		DestroyWindow(m_detail[i].value);
 		DestroyWindow(m_detail[i].name);
 	}

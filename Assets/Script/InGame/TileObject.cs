@@ -3,6 +3,7 @@
 public class TileObject : AGameObject {
     private bool _bIsRigidActivated;
     protected bool _bIsCanIgnoreBlock;
+    protected string _speechBubbleStr = "";
 
     private Rigidbody m_rigidbody;
 
@@ -54,6 +55,14 @@ public class TileObject : AGameObject {
             return;
         m_rigidbody.useGravity = activated;
         m_rigidbody.isKinematic = !activated;
+    }
+
+    public string GetSpeechBubble() {
+        return _speechBubbleStr;
+    }
+
+    public void SetSpeechBubble(string str) {
+        _speechBubbleStr = str;
     }
 
     protected void SetRigidBody(bool activated) {

@@ -82,6 +82,7 @@ public class TileMgr : MonoBehaviour {
     private bool isMouseUp;
 
     private Random rand;
+    private TileObject prev_tile = null;
 
     // Use this for initialization
     void Start() {
@@ -161,7 +162,7 @@ public class TileMgr : MonoBehaviour {
     private void ReshapeTilePosition(bool isRelax, int rotationY) {
         if (!isRelax && !isResetTilePosition) {
             isResetTilePosition = true;
-
+            AllResetTilePosition(rotationY);
         }
 
         if (isRelax && isResetTilePosition) {
@@ -184,7 +185,7 @@ public class TileMgr : MonoBehaviour {
 
     private void AllResetTilePosition(int rotationY) {
 
-        Player.GetComponent<AActor>().resetPosition();
+        //Player.GetComponent<AActor>().resetPosition();
         Player.GetComponent<APlayer>().isBlocked = false;
 
     }
@@ -362,6 +363,7 @@ public class TileMgr : MonoBehaviour {
         GameObject result = Instantiate(mObject);
 
         TileObject obj = result.GetComponent<TileObject>();
+        prev_tile = obj;
 
         //obj.Position = new Vector3(x - deltaX, y - deltaY, z - deltaZ);
         obj.id = new Vector3(x, y, z);
@@ -442,8 +444,9 @@ public class TileMgr : MonoBehaviour {
         yield return File;
 
 
+        string encodedString = System.Text.Encoding.Default.GetString(File.bytes);
         string source;
-        string[] sources = File.text.Split('\n');
+        string[] sources = encodedString.Split('\n');
 
         //Debug.Log("map data : " + File.text);
 
@@ -513,6 +516,13 @@ public class TileMgr : MonoBehaviour {
 
             if (values.Length == 0) {
                 break;
+            }
+
+            if (values[0] == "#Speech") {
+                string str = values[4].Replace("_", " ");
+                prev_tile.SetSpeechBubble(str);
+                index++;
+                continue;
             }
 
             //player count
@@ -639,6 +649,8 @@ public class TileMgr : MonoBehaviour {
             //source = stringReader.ReadLine();
 
         }
+
+        Player.GetComponent<APlayer>().Init();
 
     }
 

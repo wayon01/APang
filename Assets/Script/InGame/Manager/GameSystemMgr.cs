@@ -20,6 +20,7 @@ public class GameSystemMgr : MonoBehaviour {
 
     public bool isPlayerMoving;
     public bool isPlayerMovingUp;
+    public bool isPlayerStageNeedUpdate;
 
     public int m_playerMovingCount;
     public int m_nextStageId;
@@ -60,6 +61,7 @@ public class GameSystemMgr : MonoBehaviour {
         isFailed = false;
         isPause = false;
         isCleared = false;
+        isPlayerStageNeedUpdate = false;
         m_playerMovingCount = 0;
 
         MovingTime = 1;
@@ -103,10 +105,22 @@ public class GameSystemMgr : MonoBehaviour {
 
         if (prevPlayerStartTime >= MovingTime) {
             prevPlayerStartTime = 0;
+            isPlayerStageNeedUpdate = false;
             isPlayerMovingUp = true;
             isPlayerMoving = false;
             Player.transform.position = selectedTilePosition;
         }
+
+        if (isPlayerStageNeedUpdate) {
+            isPlayerStageNeedUpdate = false;
+            prevPlayerStartTime = 0;
+            isPlayerMovingUp = true;
+            isPlayerMoving = false;
+        }
+    }
+
+    public void SetPlayerMovingUp(bool enable) {
+        isPlayerStageNeedUpdate = enable;
     }
 
     private void OnSelected() {
@@ -326,7 +340,9 @@ public class GameSystemMgr : MonoBehaviour {
         
 
         if (jump) {
-            Player.transform.position = new Vector3(Mathf.Lerp(playerPos.x, selectedTilePosition.x, prevPlayerStartTime),
+            //float remakedDeltaTime = Mathf.Cos(prevPlayerStartTime*Mathf.PI/2 + Mathf.PI) + 1;
+            float remakedDeltaTime = prevPlayerStartTime;
+            Player.transform.position = new Vector3(Mathf.Lerp(playerPos.x, selectedTilePosition.x, remakedDeltaTime),
             Mathf.Lerp(playerPos.y, playerPos.y + ( -(1 / (9 * (prevPlayerStartTime + 0.073f))) + 1.1f) + Mathf.Sin(prevPlayerStartTime * Mathf.PI) * 0.1f, 1),
             Mathf.Lerp(playerPos.z, selectedTilePosition.z, prevPlayerStartTime));
         }else if (land) {

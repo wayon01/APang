@@ -3,6 +3,7 @@
 
 
 TileNode::TileNode(int id, int x, int y, int z): id(id), x(x), y(y), z(z) {
+	m_additionalBooleanType.insert(std::pair<std::string, bool>("말풍선 적용", false));
 }
 
 

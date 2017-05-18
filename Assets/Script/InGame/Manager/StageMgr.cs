@@ -85,6 +85,8 @@ public class StageMgr : MonoBehaviour {
                 isStageMoving = false;
                 isAnimationUpdating = true;
                 isSameStage = false;
+                GameSystemMgr gameSystemMgr = tileMgr.GameSystemManager.GetComponent<GameSystemMgr>();
+                gameSystemMgr.SetPlayerMovingUp(true);
             }
         }
     }
@@ -122,7 +124,9 @@ public class StageMgr : MonoBehaviour {
         isAnimationUpdating = true;
         //tileMgr.SettingMap(stageId);
         cameraPos = localCameraPos = MainCamera.transform.localPosition;
-        tileMgr.GameSystemManager.GetComponent<GameSystemMgr>().isPortalArrived = false;
+        GameSystemMgr gameSystemMgr = tileMgr.GameSystemManager.GetComponent<GameSystemMgr>();
+        gameSystemMgr.isPortalArrived = false;
+
     }
 
     public void SetPlayerId(Vector3 id) {
