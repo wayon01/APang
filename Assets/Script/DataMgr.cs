@@ -21,6 +21,8 @@ public class DataMgr : MonoBehaviour {
 
     void Awake() {
 
+        DontDestroyOnLoad(this);
+
         if (!LoadData()) {
             dataClass = new DataClass();
 

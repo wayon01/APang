@@ -99,6 +99,9 @@ public class TileMgr : MonoBehaviour {
         isLoad = false;
         rand = new Random();
 
+        DataMgr dataMgr = GameObject.FindWithTag("Data").GetComponent<DataMgr>();
+        int stageId = dataMgr != null ? dataMgr.dataClass.CURRENT_STAGE_ID + 1 : 3;
+
         string path;
 
         //TemporaryInit();
@@ -107,7 +110,7 @@ public class TileMgr : MonoBehaviour {
             path = "jar:file://" + Application.dataPath + "!/assets/test.map";
         }
         else {
-            path = "file://" + Application.streamingAssetsPath + "/stage3.map";
+            path = "file://" + Application.streamingAssetsPath + "/stage" + stageId +".map";
             //path = "file://" + Application.dataPath + "/Maps/test.map";
             //Debug.Log("path : " + path);
 
@@ -444,7 +447,13 @@ public class TileMgr : MonoBehaviour {
         yield return File;
 
 
-        string encodedString = System.Text.Encoding.Default.GetString(File.bytes);
+        byte[] bConvert = Encoding.Convert(Encoding.UTF8, Encoding.Default, File.bytes);
+
+        // utf-8 인코딩
+
+        //byte[] bytesForEncoding = Encoding.UTF8.GetBytes(File.text);
+        //string encodedString = Convert.ToBase64String(bytesForEncoding);
+        string encodedString = System.Text.Encoding.Default.GetString(bConvert);
         string source;
         string[] sources = encodedString.Split('\n');
 

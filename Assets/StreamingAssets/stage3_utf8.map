@@ -1,0 +1,63 @@
+﻿#MOVEMENT, 21, 26
+
+#STAGE, 0
+7, 6, 7
+
+GrassTile, 2, 2, 2
+#Speech, 2, 2, 2, 팀장님_게임_만들기_힘들어요_흑ㅎ그
+FireTile, 1, 3, 3
+#Speech, 1, 3, 3, 이쪽으로_먼저_가세요!
+FireTile, 4, 2, 2
+GrassTile, 5, 3, 3
+SpawnTile, 3, 1, 1
+#Speech, 3, 1, 1, 콘소메_팝콘은_처넌이다_><
+PortalTile, 4, 4, 4, 0, door2, area2_0
+#Speech, 4, 4, 4, 들어간다!!
+PortalTile, 2, 4, 4, 0, door1, area1_0
+
+#STAGE, 1
+7, 7, 7
+
+PortalTile, 1, 5, 4, 1, area1_0, door1
+#Speech, 1, 5, 4, 거기_당신!_예외처리는_잘_했겠지?_후훗
+FireTile, 2, 4, 5
+GrassTile, 1, 3, 6
+FireTile, 5, 5, 3
+NpcPoliceTile, 5, 6, 3
+#Speech, 5, 6, 3, ㅅㅂ
+NpcPoliceTile, 0, 3, 4
+#Speech, 0, 3, 4, 에라이_세상_쉬펄
+FireTile, 0, 3, 3
+GrassTile, 4, 3, 6
+GrassTile, 0, 2, 4
+GrassTile, 3, 2, 1
+FireTile, 3, 2, 4
+NomalTile, 4, 1, 2
+RingTile, 4, 2, 2
+
+#STAGE, 2
+7, 7, 8
+
+PortalTile, 0, 0, 2, 2, area2_0, NoTarget
+FireTile, 6, 0, 2
+NpcPoliceTile, 6, 1, 2
+#Speech, 6, 1, 2, 아_레벨_디자이너_나빴다ㄹㅇ
+GrassTile, 1, 1, 3
+FireTile, 2, 2, 5
+GrassTile, 5, 2, 5
+NpcPoliceTile, 5, 3, 5
+GrassTile, 2, 0, 2
+PortalTile, 1, 1, 6, 2, 2-2, 2-1
+PortalTile, 2, 0, 4, 2, 2-1, 2-2
+PortalTile, 5, 4, 7, 2, 2-4, 2-3
+#Speech, 5, 4, 7, 하하핫...하핫......파판하곳;ㅣㅍ다
+GrassTile, 2, 5, 6
+FireTile, 3, 6, 5
+#Speech, 3, 6, 5, 
+FireTile, 2, 5, 3
+GoalTile, 3, 4, 2, -1
+#Speech, 3, 4, 2, 후훗...나의_계획은_WAN배끼다...!
+PortalTile, 4, 0, 7, 2, 2-3, 2-4
+FireTile, 4, 1, 1
+NpcPoliceTile, 4, 2, 1
+#end

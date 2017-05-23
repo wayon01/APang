@@ -6,6 +6,7 @@
 #include "WarpTileNode.h"
 #include <iostream>
 #include "DecoTile.h"
+#include <codecvt>
 
 
 MainProc::MainProc() {
@@ -34,9 +35,11 @@ void MainProc::setFilePath(std::string path) {
 
 void MainProc::ReadMapFile() {
 
-	std::ifstream fin;
+	std::wifstream fin;
+	//fin.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::consume_header>));
 	fin.open(m_filePath);
-
+	
+	std::wstring wbuf;
 	std::string buf;
 
 	//if(getline(fin, buf)) {
@@ -57,9 +60,17 @@ void MainProc::ReadMapFile() {
 
 	TileNode* prev_node = nullptr;
 
-	while(getline(fin, buf)) {
+	while(std::getline(fin, wbuf)) {
 
-		if (buf == "") continue;
+
+
+		if (wbuf == L"") continue;
+
+		{
+			std::string str(wbuf.length(), ' ');
+			copy(wbuf.begin(), wbuf.end(), str.begin());
+			buf = str;
+		}
 
 		{
 			auto mapVector = RESMGR->GetMapProc()->GetTiles();
@@ -179,7 +190,8 @@ void MainProc::SaveMapFile() const {
 
 void MainProc::SaveMapFile(std::string str) const {
 
-	std::ofstream fout(str);
+	std::wofstream fout(str);
+	//fout.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::generate_header>));
 
 	if(fout.fail()) {
 		std::string asdf = strerror(errno);
@@ -190,7 +202,7 @@ void MainProc::SaveMapFile(std::string str) const {
 	auto mapProc = RESMGR->GetMapProc();
 	int stageId = mapProc->GetStageId();
 
-	fout << "#MOVEMENT, " << m_goldValue << ", " << m_silverValue << std::endl;
+	fout << std::endl << "#MOVEMENT, " << m_goldValue << ", " << m_silverValue << std::endl;
 
 	for(int stage = 0; stage < mapProc->GetMapStage().size(); stage++) {
 
@@ -217,18 +229,18 @@ void MainProc::SaveMapFile(std::string str) const {
 
 			if(id == "GoalTile") {
 				GoalTileNode* tmp_goal = static_cast<GoalTileNode*>(tile);
-				fout << id << ", " << tile->x << ", " << tile->y << ", " << tile->z << ", " << tmp_goal->m_additionalIntegerType["Area ID"] << std::endl;
+				fout << id.c_str() << ", " << tile->x << ", " << tile->y << ", " << tile->z << ", " << tmp_goal->m_additionalIntegerType["Area ID"] << std::endl;
 				if(tile->m_additionalBooleanType["말풍선 적용"]) {
-					fout << "#Speech, " << tile->x << ", " << tile->y << ", " << tile->z << ", " << replace_all(tile->m_additionalStringType["말풍선 내용"], " ", "_") << std::endl;
+					fout << "#Speech, " << tile->x << ", " << tile->y << ", " << tile->z << ", " << replace_all(tile->m_additionalStringType["말풍선 내용"], " ", "_").c_str() << std::endl;
 				}
 				continue;
 			}
 
 			if(id == "PortalTile") {
 				WarpTileNode* tmp_warp = static_cast<WarpTileNode*>(tile);
-				fout << id << ", " << tile->x << ", " << tile->y << ", " << tile->z << ", " << tmp_warp->m_additionalIntegerType["Area ID"] << ", " << tmp_warp->m_additionalStringType["타일 이름"] << ", " << tmp_warp->m_additionalStringType["이동할 타일 이름"] << std::endl;
+				fout << id.c_str() << ", " << tile->x << ", " << tile->y << ", " << tile->z << ", " << tmp_warp->m_additionalIntegerType["Area ID"] << ", " << tmp_warp->m_additionalStringType["타일 이름"].c_str() << ", " << tmp_warp->m_additionalStringType["이동할 타일 이름"].c_str() << std::endl;
 				if (tile->m_additionalBooleanType["말풍선 적용"]) {
-					fout << "#Speech, " << tile->x << ", " << tile->y << ", " << tile->z << ", " << replace_all(tile->m_additionalStringType["말풍선 내용"], " ", "_") << std::endl;
+					fout << "#Speech, " << tile->x << ", " << tile->y << ", " << tile->z << ", " << replace_all(tile->m_additionalStringType["말풍선 내용"], " ", "_").c_str() << std::endl;
 				}
 				continue;
 			}
@@ -236,15 +248,15 @@ void MainProc::SaveMapFile(std::string str) const {
 			if(id == "DecoTile") {
 				DecoTile* tmp_deco = static_cast<DecoTile*>(tile);
 				std::string tmp_deco_enable = tmp_deco->m_additionalBooleanType["타일인식"] ? "true" : "false";
-				fout << "DecoTile" << " # " << asset_proc->FindDecoTileIdStr(tile->id) << ", " << tile->x << ", " << tile->y << ", " << tile->z << ", " << tmp_deco_enable << std::endl;
+				fout << "DecoTile" << " # " << asset_proc->FindDecoTileIdStr(tile->id).c_str() << ", " << tile->x << ", " << tile->y << ", " << tile->z << ", " << tmp_deco_enable.c_str() << std::endl;
 				if (tile->m_additionalBooleanType["말풍선 적용"]) {
-					fout << "#Speech, " << tile->x << ", " << tile->y << ", " << tile->z << ", " << replace_all(tile->m_additionalStringType["말풍선 내용"], " ", "_") << std::endl;
+					fout << "#Speech, " << tile->x << ", " << tile->y << ", " << tile->z << ", " << replace_all(tile->m_additionalStringType["말풍선 내용"], " ", "_").c_str() << std::endl;
 				}
 				continue;
 			}
-			fout << id << ", " << tile->x << ", " << tile->y << ", " << tile->z << std::endl;
+			fout << id.c_str() << ", " << tile->x << ", " << tile->y << ", " << tile->z << std::endl;
 			if (tile->m_additionalBooleanType["말풍선 적용"]) {
-				fout << "#Speech, " << tile->x << ", " << tile->y << ", " << tile->z << ", " << replace_all(tile->m_additionalStringType["말풍선 내용"], " ", "_") << std::endl;
+				fout << "#Speech, " << tile->x << ", " << tile->y << ", " << tile->z << ", " << replace_all(tile->m_additionalStringType["말풍선 내용"], " ", "_").c_str() << std::endl;
 			}
 		}
 	}
